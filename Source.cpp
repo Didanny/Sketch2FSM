@@ -222,8 +222,9 @@ int main(int argc, const char** argv)
 	Mat labelImage(img.size(), CV_32S);
 	Mat stats;
 	Mat centroids;
-	cout << "bw= " << bw << endl;
+	//cout << "bw= " << bw << endl;
 	int nLabels = connectedComponentsWithStats(bw, labelImage, stats, centroids, 8);
+	cout << "nLabels= " << nLabels << endl;
 	Mat image;
 	img.copyTo(image);
 	//threshold(image, image, 0, 255, THRESH_BINARY);
@@ -252,6 +253,7 @@ int main(int argc, const char** argv)
 		if (lol >= 10) cv::rectangle(image, rect, color, 3);
 		num++;
 	}
+	std::cout << "stats.rows= " << stats.rows << endl;
 	std::cout << "There are: " << num << endl;
 
 	namedWindow("Image3", 1);

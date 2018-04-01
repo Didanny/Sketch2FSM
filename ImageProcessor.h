@@ -13,4 +13,5 @@ public:
 	~ImageProcessor(); // Destructor
 	cv::Mat originalImage(); // Return m_image
 	cv::Mat forCircleDetector(); // Returns a processed image for the CircleDetectr object
+	cv::Mat forComponentDetector(); // Returns a processed image for the ComponentDetector object
 };
