@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CircleDetector.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

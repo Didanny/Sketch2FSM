@@ -1,2 +1,5 @@
-﻿  Source.cpp
+﻿  Component.cpp
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\component.cpp(8): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  Source.cpp
+  Generating Code...
   OpenCVtest.vcxproj -> C:\Users\Danny\Desktop\AUB\EECE 437\OpenCVtest\x64\Debug\OpenCVtest.exe

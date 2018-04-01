@@ -190,6 +190,7 @@ const char* keys =
 	"{help h||}{@image|../data/stuff.jpg|image for converting to a grayscale}"
 };
 
+
 int main(int argc, const char** argv)
 {
 	//CommandLineParser parser(argc, argv, keys);
