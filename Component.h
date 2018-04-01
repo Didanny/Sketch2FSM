@@ -15,4 +15,5 @@ private:
 public:
 	Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy); // Constructor
 	~Component(); // Destructor
+	cv::Rect getBoundingBox();
 };

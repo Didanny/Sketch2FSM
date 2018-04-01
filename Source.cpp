@@ -145,17 +145,19 @@
 //	return;
 //}
 
-#include <opencv2/core/utility.hpp>
-#include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
+//#include <opencv2/core/utility.hpp>
+//#include "opencv2/imgproc.hpp"
+//#include "opencv2/imgcodecs.hpp"
+//#include "opencv2/highgui.hpp"
 #include <iostream>
+#include "ImageProcessor.h"
+#include "ComponentDetector.h"
 
-using namespace cv;
-using namespace std;
+//using namespace cv;
+//using namespace std;
 
-Mat img;
-int threshval = 100;
+//Mat img;
+//int threshval = 100;
 
 //static void on_trackbar(int, void*)
 //{
@@ -178,7 +180,7 @@ int threshval = 100;
 
 static void help()
 {
-	cout << "\n This program demonstrates connected components and use of the trackbar\n"
+	std::cout << "\n This program demonstrates connected components and use of the trackbar\n"
 		"Usage: \n"
 		"  ./connected_components <image(../data/stuff.jpg as default)>\n"
 		"The image is converted to grayscale and displayed, another image has a trackbar\n"
@@ -200,8 +202,28 @@ int main(int argc, const char** argv)
 	//	return 0;
 	//}
 	//string inputImage = parser.get<string>(0);
-	img = imread("./../../test2.jpg", 0);
+	cv::Mat img = cv::imread("./../../test2.jpg", 0);
+	cv::threshold(img, img, 170, 255, cv::THRESH_BINARY);
 
+	ImageProcessor image_processor("./../../test2.jpg");
+	ComponentDetector component_detector(img /*image_processor.forComponentDetector()*/);
+	component_detector.detectComponents();
+
+	Components components = component_detector.getComponents();
+	
+	for (int i = 0; i < components.size(); i++)
+	{
+		cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200,0,0), 3);
+		std::cout << i << std::endl;
+	}
+
+	cv::Mat y = image_processor.forComponentDetector();
+
+	cv::namedWindow("Image3", 1);
+	cv::imshow("Image3", img);
+	cv::waitKey(0);
+
+#if 0
 	//if (img.empty())
 	//{
 	//	cout << "Could not read input image file: " << inputImage << endl;
@@ -213,7 +235,7 @@ int main(int argc, const char** argv)
 	//namedWindow("Image", 1);
 	//imshow("Image", img);
 
-	threshold(img, img, 170, 255, THRESH_BINARY);
+	//threshold(img, img, 170, 255, THRESH_BINARY);
 
 	//namedWindow("Image2", 1);
 	//imshow("Image2", img);
@@ -264,4 +286,5 @@ int main(int argc, const char** argv)
 
 	waitKey(0);
 	return 0;
+#endif
 }

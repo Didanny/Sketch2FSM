@@ -1,6 +1,6 @@
 #include "ComponentDetector.h"
 
-#define init(x, y, width, height, area, centroid_x, centroid_y) int x = stats.at<int>(cv::Point(0, i)); \
+#define INIT(x, y, width, height, area, centroid_x, centroid_y) int x = stats.at<int>(cv::Point(0, i)); \
 		int y = stats.at<int>(cv::Point(1, i)); \
 		int width = stats.at<int>(cv::Point(2, i)); \
 		int height = stats.at<int>(cv::Point(3, i)); \
@@ -25,12 +25,17 @@ void ComponentDetector::detectComponents()
 	cv::connectedComponentsWithStats(bw, m_labeled_image, stats, centroids);
 	for (int i = 0; i < stats.rows; i++)
 	{
-		init(x, y, width, height, area, centroid_x, centroid_y);
+		INIT(x, y, width, height, area, centroid_x, centroid_y);
 
-		if (area >= 10)
+		if (area >= 10 && height != m_original_image.rows && width != m_original_image.cols)
 		{
 			Component component(x, y, width, height, area, centroid_x, centroid_y);
 			m_components.push_back(component);
 		}
 	}
+}
+
+Components& ComponentDetector::getComponents()
+{
+	return m_components;
 }

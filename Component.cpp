@@ -11,3 +11,8 @@ Component::Component(int t_x, int t_y, int t_width, int t_height, int t_area, do
 // Destructor
 Component::~Component()
 {}
+
+cv::Rect Component::getBoundingBox()
+{
+	return m_bounding_box;
+}

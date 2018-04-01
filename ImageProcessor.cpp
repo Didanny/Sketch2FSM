@@ -23,6 +23,6 @@ cv::Mat ImageProcessor::forCircleDetector()
 cv::Mat ImageProcessor::forComponentDetector()
 {
 	cv::Mat binary_image;
-	cv::threshold(binary_image, binary_image, 170, 255, cv::THRESH_BINARY);
+	cv::threshold(m_image, binary_image, 170, 255, cv::THRESH_BINARY);
 	return binary_image;
 }
