@@ -207,25 +207,28 @@ int main(int argc, const char** argv)
 	//	cout << "Could not read input image file: " << inputImage << endl;
 	//	return -1;
 	//}
-	GaussianBlur(img, img, cv::Size(9, 9), 1, 1);
+	
+	//GaussianBlur(img, img, cv::Size(9, 9), 1, 1);
 
-	namedWindow("Image", 1);
-	imshow("Image", img);
+	//namedWindow("Image", 1);
+	//imshow("Image", img);
 
 	threshold(img, img, 170, 255, THRESH_BINARY);
 
-	namedWindow("Image2", 1);
-	imshow("Image2", img);
+	//namedWindow("Image2", 1);
+	//imshow("Image2", img);
 
 	Mat bw = threshval < 128 ? (img < threshval) : (img > threshval);
 	Mat labelImage(img.size(), CV_32S);
 	Mat stats;
 	Mat centroids;
+	cout << "bw= " << bw << endl;
 	int nLabels = connectedComponentsWithStats(bw, labelImage, stats, centroids, 8);
 	Mat image;
 	img.copyTo(image);
 	//threshold(image, image, 0, 255, THRESH_BINARY);
 
+	int num = 0;
 	for (int i = 0; i<stats.rows; i++)
 	{
 		int x = stats.at<int>(Point(0, i));
@@ -237,16 +240,19 @@ int main(int argc, const char** argv)
 		double cx = 0;
 		double cy = 0;
 
+		if (lol < 10) num--;
+
 		cx = centroids.at<double>(i, 0);
 		cy = centroids.at<double>(i, 1);
 
-		std::cout << "x=" << x << " y=" << y << " w=" << w << " h=" << h << " area=" << lol << " cx=" << cx << " cy=" << cy << std::endl;
+		if (lol >= 10) std::cout << "x=" << x << " y=" << y << " w=" << w << " h=" << h << " area=" << lol << " cx=" << cx << " cy=" << cy << std::endl;
 
 		Scalar color(200, 0, 0);
 		Rect rect(x, y, w, h);
-		cv::rectangle(image, rect, color, 3);
+		if (lol >= 10) cv::rectangle(image, rect, color, 3);
+		num++;
 	}
-	std::cout << "There are: " << stats.rows << endl;
+	std::cout << "There are: " << num << endl;
 
 	namedWindow("Image3", 1);
 	imshow("Image3", image);
