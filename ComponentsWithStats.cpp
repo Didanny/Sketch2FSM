@@ -18,7 +18,12 @@ int ComponentsWithStats::getMeanArea()
 
 int ComponentsWithStats::getMeanBoxArea()
 {
-	return 0;
+	int sum = 0;
+	for (int i = 0; i < this->size(); i++)
+	{
+		sum += this->at(i).getBoundingBox().area;
+	}
+	return (sum / this->size());
 }
 
 double ComponentsWithStats::getVariance(Stat t_stat)
