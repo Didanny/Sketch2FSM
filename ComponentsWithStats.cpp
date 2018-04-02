@@ -34,7 +34,7 @@ double ComponentsWithStats::getVarianceArea()
 	{
 		sum += pow((this->at(i).getArea() - mean), 2.0);
 	}
-	return sqrt(sum / this->size() - 1);
+	return sum / this->size() - 1;
 }
 
 double ComponentsWithStats::getVarianceBoxArea()
@@ -45,10 +45,17 @@ double ComponentsWithStats::getVarianceBoxArea()
 	{
 		sum += pow((this->at(i).getBoundingBox().area - mean), 2.0);
 	}
-	return sqrt(sum / this->size() - 1);
+	return sum / this->size() - 1;
 }
 
 double ComponentsWithStats::getStdev(Stat t_stat)
 {
-	return 0.0;
+	if (t_stat == PIX)
+	{
+		return sqrt(getVarianceArea());
+	}
+	else if (t_stat == BOX)
+	{
+		return sqrt(getVarianceBoxArea());
+	}
 }
