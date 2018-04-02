@@ -16,3 +16,8 @@ cv::Rect Component::getBoundingBox()
 {
 	return m_bounding_box;
 }
+
+int Component::getArea()
+{
+	return m_area;
+}
