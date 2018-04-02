@@ -22,7 +22,7 @@ int Component::getArea()
 	return m_area;
 }
 
-bool Component::isInsideOf(Component & t_component)
+bool Component::contains(Component & t_component)
 {
 	int my_left = getBoundingBox().x;
 	int my_right = my_left + getBoundingBox().width;

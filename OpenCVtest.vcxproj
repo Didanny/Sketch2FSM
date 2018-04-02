@@ -123,6 +123,7 @@
     <ClCompile Include="CircleDetector.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentDetector.cpp" />
+    <ClCompile Include="ComponentsWithStats.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
@@ -130,6 +131,7 @@
     <ClInclude Include="CircleDetector.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentDetector.h" />
+    <ClInclude Include="ComponentsWithStats.h" />
     <ClInclude Include="ImageProcessor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
