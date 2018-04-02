@@ -17,4 +17,5 @@ public:
 	~Component(); // Destructor
 	cv::Rect getBoundingBox();
 	int getArea(); // Returns the are in pixels
+	bool isInsideOf(Component& t_component); // Returns true if this bounding box is completely within the t_component bounding box
 };
