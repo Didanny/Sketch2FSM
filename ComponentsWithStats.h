@@ -25,6 +25,7 @@ public:
 	~ComponentsWithStats(); // Destructor
 	double getMeanArea(); // Returns the mean of the areas of the components
 	double getMeanBoxArea(); // Returns the mean of the areas of the bounding boxes of the components
-	double getVariance(Stat t_stat); // Returns variance of desired Stat
+	double getVarianceArea(); // Returns variance of Pixel Areas
+	double getVarianceBoxArea(); // Returns variance of Box Areas
 	double getStdev(Stat t_stat); // Returns the standard deviation of the desired Stat
 };
