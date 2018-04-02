@@ -23,8 +23,8 @@ private:
 public:
 	ComponentsWithStats(); // Constructor
 	~ComponentsWithStats(); // Destructor
-	int getMeanArea(); // Returns the mean of the areas of the components
-	int getMeanBoxArea(); // Returns the mean of the areas of the bounding boxes of the components
+	double getMeanArea(); // Returns the mean of the areas of the components
+	double getMeanBoxArea(); // Returns the mean of the areas of the bounding boxes of the components
 	double getVariance(Stat t_stat); // Returns variance of desired Stat
 	double getStdev(Stat t_stat); // Returns the standard deviation of the desired Stat
 };

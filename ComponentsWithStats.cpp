@@ -6,9 +6,9 @@ ComponentsWithStats::ComponentsWithStats()
 ComponentsWithStats::~ComponentsWithStats()
 {}
 
-int ComponentsWithStats::getMeanArea()
+double ComponentsWithStats::getMeanArea()
 {
-	int sum = 0;
+	double sum = 0;
 	for (int i = 0; i < this->size(); i++)
 	{
 		sum += this->at(i).getArea();
@@ -16,9 +16,9 @@ int ComponentsWithStats::getMeanArea()
 	return (sum / this->size());
 }
 
-int ComponentsWithStats::getMeanBoxArea()
+double ComponentsWithStats::getMeanBoxArea()
 {
-	int sum = 0;
+	double sum = 0;
 	for (int i = 0; i < this->size(); i++)
 	{
 		sum += this->at(i).getBoundingBox().area;
