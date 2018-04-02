@@ -27,12 +27,12 @@ bool Component::contains(Component & t_component)
 	int my_left = getBoundingBox().x;
 	int my_right = my_left + getBoundingBox().width;
 	int my_top = getBoundingBox().y;
-	int my_bottom = my_top - getBoundingBox().height;
+	int my_bottom = my_top + getBoundingBox().height;
 
 	int their_left = t_component.getBoundingBox().x;
 	int their_right = their_left + t_component.getBoundingBox().width;
 	int their_top = t_component.getBoundingBox().y;
-	int their_bottom = their_top - t_component.getBoundingBox().height;
+	int their_bottom = their_top + t_component.getBoundingBox().height;
 
-	return their_right < my_right && their_left > my_left && their_top > my_top && their_bottom < my_bottom;
+	return (their_right < my_right && their_left > my_left && their_top > my_top && their_bottom < my_bottom);
 }

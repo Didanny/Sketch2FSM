@@ -211,11 +211,36 @@ int main(int argc, const char** argv)
 
 	Components components = component_detector.getComponents();
 	
+	//for (int i = 0; i < components.size(); i++)
+	//{
+	//	cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200,0,0), 3);
+	//	std::cout << i << std::endl;
+	//}
+
 	for (int i = 0; i < components.size(); i++)
 	{
-		cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200,0,0), 3);
-		std::cout << i << std::endl;
+		for (int j = 0; j < components.size(); j++)
+		{
+			if (components.at(j).contains(components.at(i)))
+			{
+				std::cout << "contains: " << i << std::endl;
+				cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+			}
+		}
 	}
+
+#pragma region Debugging .contains()
+	//// t in "State 2"
+	//cv::rectangle(img, components.at(10).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+
+	//// Circle around "State 2"
+	//cv::rectangle(img, components.at(4).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+
+	//// Should print 1
+	//std::cout << components.at(4).contains(components.at(10)) << std::endl;
+	//// SHould print 0
+	//std::cout << components.at(10).contains(components.at(4)) << std::endl;
+#pragma endregion
 
 	cv::Mat y = image_processor.forComponentDetector();
 
