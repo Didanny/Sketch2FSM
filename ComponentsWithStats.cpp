@@ -21,7 +21,7 @@ double ComponentsWithStats::getMeanBoxArea()
 	double sum = 0;
 	for (int i = 0; i < this->size(); i++)
 	{
-		sum += this->at(i).getBoundingBox().area;
+		sum += this->at(i).getBoundingBox().area();
 	}
 	return (sum / this->size());
 }
@@ -43,7 +43,7 @@ double ComponentsWithStats::getVarianceBoxArea()
 	double sum = 0;
 	for (int i = 0; i < this->size(); i++)
 	{
-		sum += pow((this->at(i).getBoundingBox().area - mean), 2.0);
+		sum += pow((this->at(i).getBoundingBox().area() - mean), 2.0);
 	}
 	return sum / this->size() - 1;
 }

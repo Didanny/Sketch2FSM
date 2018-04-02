@@ -178,14 +178,14 @@
 //	imshow("Connected Components", dst);
 //}
 
-static void help()
-{
-	std::cout << "\n This program demonstrates connected components and use of the trackbar\n"
-		"Usage: \n"
-		"  ./connected_components <image(../data/stuff.jpg as default)>\n"
-		"The image is converted to grayscale and displayed, another image has a trackbar\n"
-		"that controls thresholding and thereby the extracted contours which are drawn in color\n";
-}
+//static void help()
+//{
+//	std::cout << "\n This program demonstrates connected components and use of the trackbar\n"
+//		"Usage: \n"
+//		"  ./connected_components <image(../data/stuff.jpg as default)>\n"
+//		"The image is converted to grayscale and displayed, another image has a trackbar\n"
+//		"that controls thresholding and thereby the extracted contours which are drawn in color\n";
+//}
 
 const char* keys =
 {

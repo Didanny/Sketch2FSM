@@ -1,2 +1,3 @@
-﻿  ComponentDetector.cpp
+﻿  ComponentsWithStats.cpp
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\componentswithstats.cpp(61): warning C4715: 'ComponentsWithStats::getStdev': not all control paths return a value
   OpenCVtest.vcxproj -> C:\Users\Danny\Desktop\AUB\EECE 437\OpenCVtest\x64\Debug\OpenCVtest.exe
