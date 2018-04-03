@@ -217,17 +217,50 @@ int main(int argc, const char** argv)
 	//	std::cout << i << std::endl;
 	//}
 
+#pragma region Finding Containers
+
+	Components containers;
 	for (int i = 0; i < components.size(); i++)
 	{
 		for (int j = 0; j < components.size(); j++)
 		{
 			if (components.at(j).contains(components.at(i)))
 			{
-				std::cout << "contains: " << i << std::endl;
-				cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+				if (components.at(i).getContainer() != NULL)
+				{
+					if (components.at(j).getBoundingBox().area() < components.at(i).getBoundingBox().area())
+					{
+						components.at(i).setContainer(components.at(j));
+					}
+				}
+				else
+				{
+					components.at(i).setContainer(components.at(j));
+				}				
 			}
 		}
 	}
+
+	// The 1 in "State 1"
+	cv::rectangle(img, components.at(13).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+	// Should be the inner circle of State 1
+	cv::rectangle(img, components.at(14).getContainer()->getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+
+#pragma endregion
+
+
+	//// Drawing the contained components
+	//for (int i = 0; i < components.size(); i++)
+	//{
+	//	for (int j = 0; j < components.size(); j++)
+	//	{
+	//		if (components.at(j).contains(components.at(i)))
+	//		{
+	//			std::cout << "contains: " << i << std::endl;
+	//			cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+	//		}
+	//	}
+	//}
 
 #pragma region Debugging .contains()
 	//// t in "State 2"
