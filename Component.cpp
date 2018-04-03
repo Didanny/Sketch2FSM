@@ -2,7 +2,7 @@
 
 // Constructor
 Component::Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy)
-	: m_area(t_area)
+	: m_area(t_area), m_container(NULL)
 {
 	m_bounding_box = cv::Rect(t_x, t_y, t_width, t_height);
 	m_centroid = cv::Point(t_cx, t_cy);
@@ -22,7 +22,7 @@ int Component::getArea()
 	return m_area;
 }
 
-bool Component::contains(Component & t_component)
+bool Component::contains(Component& t_component)
 {
 	int my_left = getBoundingBox().x;
 	int my_right = my_left + getBoundingBox().width;
@@ -35,4 +35,14 @@ bool Component::contains(Component & t_component)
 	int their_bottom = their_top + t_component.getBoundingBox().height;
 
 	return (their_right < my_right && their_left > my_left && their_top > my_top && their_bottom < my_bottom);
+}
+
+void Component::setContainer(Component& t_component)
+{
+	m_container = &t_component;
+}
+
+Component * Component::getContainer()
+{
+	return m_container;
 }
