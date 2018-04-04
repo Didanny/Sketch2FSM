@@ -21,4 +21,5 @@ public:
 	bool contains(Component& t_component); // Returns true if this bounding box is completely within the t_component bounding box
 	void setContainer(Component& t_component); // Sets m_container to t_component
 	Component* getContainer(); // Returns pointer to the container
+	cv::Point getCentroid();
 };

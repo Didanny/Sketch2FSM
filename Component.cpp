@@ -46,3 +46,8 @@ Component * Component::getContainer()
 {
 	return m_container;
 }
+
+cv::Point Component::getCentroid()
+{
+	return m_centroid;
+}

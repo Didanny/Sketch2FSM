@@ -246,6 +246,14 @@ int main(int argc, const char** argv)
 	// Should be the inner circle of State 1
 	cv::rectangle(img, components.at(14).getContainer()->getBoundingBox(), cv::Scalar(200, 0, 0), 3);
 
+	for (int i = 0; i < components.size(); i++)
+	{
+		float x = components.at(i).getCentroid().x;
+		float y = components.at(i).getCentroid().y;
+		cv::Point center(cvRound(x), cvRound(y));
+		cv::circle(img, center, 3, cv::Scalar(150, 0, 0), -1, 8, 0);
+	}
+
 #pragma endregion
 
 
