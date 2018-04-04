@@ -209,7 +209,7 @@ int main(int argc, const char** argv)
 	ComponentDetector component_detector(img /*image_processor.forComponentDetector()*/);
 	component_detector.detectComponents();
 
-	Components components = component_detector.getComponents();
+	//Components components = component_detector.getComponents();
 	
 	//for (int i = 0; i < components.size(); i++)
 	//{
@@ -220,26 +220,8 @@ int main(int argc, const char** argv)
 #pragma region Finding Containers
 
 	Components containers;
-	for (int i = 0; i < components.size(); i++)
-	{
-		for (int j = 0; j < components.size(); j++)
-		{
-			if (components.at(j).contains(components.at(i)))
-			{
-				if (components.at(i).getContainer() != NULL)
-				{
-					if (components.at(i).getContainer()->getBoundingBox().area() > components.at(j).getBoundingBox().area())
-					{
-						components.at(i).setContainer(components.at(j));
-					}
-				}
-				else
-				{
-					components.at(i).setContainer(components.at(j));
-				}				
-			}
-		}
-	}
+	component_detector.findContainers();
+	Components components = component_detector.getComponents();
 
 	// The 1 in "State 1"
 	cv::rectangle(img, components.at(13).getBoundingBox(), cv::Scalar(200, 0, 0), 3);

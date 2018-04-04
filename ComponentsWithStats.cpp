@@ -58,4 +58,5 @@ double ComponentsWithStats::getStdev(Stat t_stat)
 	{
 		return sqrt(getVarianceBoxArea());
 	}
+	return -1;
 }
