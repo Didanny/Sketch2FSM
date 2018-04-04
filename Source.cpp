@@ -228,7 +228,7 @@ int main(int argc, const char** argv)
 			{
 				if (components.at(i).getContainer() != NULL)
 				{
-					if (components.at(j).getBoundingBox().area() < components.at(i).getBoundingBox().area())
+					if (components.at(j).getBoundingBox().area() > components.at(i).getBoundingBox().area())
 					{
 						components.at(i).setContainer(components.at(j));
 					}
