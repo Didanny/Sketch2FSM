@@ -39,3 +39,27 @@ Components& ComponentDetector::getComponents()
 {
 	return m_components;
 }
+
+void ComponentDetector::findContainers()
+{
+	for (int i = 0; i < m_components.size(); i++)
+	{
+		for (int j = 0; j < m_components.size(); j++)
+		{
+			if (m_components.at(j).contains(m_components.at(i)))
+			{
+				if (m_components.at(i).getContainer() != NULL)
+				{
+					if (m_components.at(i).getContainer()->getBoundingBox().area() > m_components.at(j).getBoundingBox().area())
+					{
+						m_components.at(i).setContainer(m_components.at(j));
+					}
+				}
+				else
+				{
+					m_components.at(i).setContainer(m_components.at(j));
+				}
+			}
+		}
+	}
+}
