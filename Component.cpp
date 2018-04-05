@@ -51,3 +51,8 @@ cv::Point Component::getCentroid()
 {
 	return m_centroid;
 }
+
+Component Component::copy()
+{
+	return Component(getBoundingBox().x, getBoundingBox().y, getBoundingBox().width, getBoundingBox().height, getBoundingBox().area(), getCentroid().x, getCentroid().y);
+}
