@@ -229,9 +229,9 @@ int main(int argc, const char** argv)
 	Components components = component_detector.getComponents();
 
 	// The 1 in "State 1"
-	cv::rectangle(img, components.at(13).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+	cv::rectangle(img, components.at(12).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
 	// Should be the inner circle of State 1
-	cv::rectangle(img, components.at(14).getContainer()->getBoundingBox(), cv::Scalar(200, 0, 0), 3);
+	//cv::rectangle(img, components.at(14).getContainer()->getBoundingBox(), cv::Scalar(200, 0, 0), 3);
 
 	for (int i = 0; i < components.size(); i++)
 	{
@@ -285,6 +285,14 @@ int main(int argc, const char** argv)
 
 	cv::namedWindow("Image3", 1);
 	cv::imshow("Image3", img);
+
+	cv::Mat z = component_detector.getLabeledImage();
+
+	cv::namedWindow("Labels", 1);
+	cv::imshow("Labels", (z == (components.at(12).getLabel())));
+
+	//std::cout << (z == 1) << std::endl;
+
 	cv::waitKey(0);
 
 #if 0
