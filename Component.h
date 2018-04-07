@@ -8,13 +8,14 @@
 class Component
 {
 private:
+	int m_label;
 	cv::Rect m_bounding_box; // The bounding box of a component
 	int m_area; // The area of the component in pixels
 	cv::Point m_centroid; // The centroid of the components
 	bool m_is_enclosed; // true if component is entirely within another component
 	Component* m_container; // The smallest component that encloses this component
 public:
-	Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy); // Constructor
+	Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy, int t_label); // Constructor
 	~Component(); // Destructor
 	cv::Rect getBoundingBox(); // Returns the bounding box of the component
 	int getArea(); // Returns the are in pixels
@@ -23,4 +24,5 @@ public:
 	Component* getContainer(); // Returns pointer to the container
 	cv::Point getCentroid(); // Returns the centroid
 	Component copy(); // Returns a copy of the component
+	int getLabel(); // Returns label
 };
