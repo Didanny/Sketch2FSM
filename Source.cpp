@@ -293,7 +293,7 @@ int main(int argc, const char** argv)
 
 	//std::cout << (z == 1) << std::endl;
 
-	cv::waitKey(0);
+	cv::waitKey(0);;
 
 #if 0
 	//if (img.empty())
