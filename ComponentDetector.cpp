@@ -29,7 +29,7 @@ void ComponentDetector::detectComponents()
 
 		if (area >= 10 && height != m_original_image.rows && width != m_original_image.cols)
 		{
-			Component component(x, y, width, height, area, centroid_x, centroid_y);
+			Component component(x, y, width, height, area, centroid_x, centroid_y, i);
 			m_components.push_back(component);
 		}
 	}
@@ -63,3 +63,10 @@ void ComponentDetector::findContainers()
 		}
 	}
 }
+
+cv::Mat ComponentDetector::getLabeledImage()
+{
+	return m_labeled_image;
+}
+
+
