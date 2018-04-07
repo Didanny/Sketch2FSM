@@ -192,6 +192,11 @@ const char* keys =
 	"{help h||}{@image|../data/stuff.jpg|image for converting to a grayscale}"
 };
 
+std::vector<int> vect;
+std::vector<int>& Vect()
+{
+	return vect;
+}
 
 int main(int argc, const char** argv)
 {
@@ -234,6 +239,17 @@ int main(int argc, const char** argv)
 		float y = components.at(i).getCentroid().y;
 		cv::Point center(cvRound(x), cvRound(y));
 		cv::circle(img, center, 3, cv::Scalar(150, 0, 0), -1, 8, 0);
+	}
+	vect.push_back(10);
+	vect.push_back(20);
+	vect.push_back(30);
+
+	std::vector<int> vect2 = Vect();
+	vect2.push_back(40);
+
+	for (int i = 0; i < vect2.size(); i++)
+	{
+		std::cout << vect2.at(i) << std::endl;
 	}
 
 #pragma endregion

@@ -120,18 +120,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CircleClassifier.cpp" />
     <ClCompile Include="CircleDetector.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ComponentDetector.cpp" />
     <ClCompile Include="ComponentsWithStats.cpp" />
+    <ClCompile Include="Container.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CircleClassifier.h" />
     <ClInclude Include="CircleDetector.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentDetector.h" />
     <ClInclude Include="ComponentsWithStats.h" />
+    <ClInclude Include="Container.h" />
     <ClInclude Include="ImageProcessor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
