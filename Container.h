@@ -13,4 +13,5 @@ public:
 	~Container(); // Desctructor
 	Components getChildren(); // Returns m_children
 	void addChild(Component t_child); // Adds child to m_children
+	bool isCircle(); // Returns true if container is in fact a circle
 };

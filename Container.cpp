@@ -22,3 +22,8 @@ void Container::addChild(Component t_child)
 {
 	getChildren().push_back(t_child);
 }
+
+bool Container::isCircle()
+{
+	return false;
+}
