@@ -5,9 +5,10 @@
 class Container
 {
 private:
-	Component* m_container;
+
 	Components m_children;
-public:
+public:	
+	Component* m_container;
 	Container(Component& t_container); // Constructor
 	Container(Component& t_container, Component t_child); // Constructor with first child
 	~Container(); // Desctructor
@@ -15,3 +16,20 @@ public:
 	void addChild(Component t_child); // Adds child to m_children
 	bool isCircle(); // Returns true if container is in fact a circle
 };
+
+struct less_than_label
+{
+	inline bool operator() (const Container& struct1, const Container& struct2)
+	{
+		return (struct1.m_container->m_label < struct2.m_container->m_label);
+	}
+};
+
+struct equal_label
+{
+	inline bool operator() (const Container& struct1, const Container& struct2)
+	{
+		return (struct1.m_container->m_label == struct2.m_container->m_label);
+	}
+};
+
