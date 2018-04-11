@@ -1,4 +1,2 @@
 ﻿  Source.cpp
-c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\source.cpp(238): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\source.cpp(239): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   OpenCVtest.vcxproj -> C:\Users\Danny\Desktop\AUB\EECE 437\OpenCVtest\x64\Debug\OpenCVtest.exe
