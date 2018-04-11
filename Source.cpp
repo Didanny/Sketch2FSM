@@ -151,7 +151,7 @@
 //#include "opencv2/highgui.hpp"
 #include <iostream>
 #include "ImageProcessor.h"
-#include "ComponentDetector.h"
+#include "CircleClassifier.h"
 
 //using namespace cv;
 //using namespace std;
@@ -200,6 +200,7 @@ std::vector<int>& Vect()
 
 int main(int argc, const char** argv)
 {
+#pragma region Setup Detector
 	//CommandLineParser parser(argc, argv, keys);
 	//if (parser.has("help"))
 	//{
@@ -221,40 +222,28 @@ int main(int argc, const char** argv)
 	//	cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200,0,0), 3);
 	//	std::cout << i << std::endl;
 	//}
+#pragma endregion
 
 #pragma region Finding Containers
 
-	Components containers;
+	Containers containers;
 	component_detector.findContainers();
 	Components components = component_detector.getComponents();
+
+	CircleClassifier circle_classifier(component_detector.getLabeledImage());
+	circle_classifier.initContainers(components);
+	containers = circle_classifier.getContainers();
+
+	std::cout << containers.size() << std::endl;
 
 	// The 1 in "State 1"
 	cv::rectangle(img, components.at(12).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
 	// Should be the inner circle of State 1
 	//cv::rectangle(img, components.at(14).getContainer()->getBoundingBox(), cv::Scalar(200, 0, 0), 3);
 
-	for (int i = 0; i < components.size(); i++)
-	{
-		float x = components.at(i).getCentroid().x;
-		float y = components.at(i).getCentroid().y;
-		cv::Point center(cvRound(x), cvRound(y));
-		cv::circle(img, center, 3, cv::Scalar(150, 0, 0), -1, 8, 0);
-	}
-	vect.push_back(10);
-	vect.push_back(20);
-	vect.push_back(30);
-
-	std::vector<int> vect2 = Vect();
-	vect2.push_back(40);
-
-	for (int i = 0; i < vect2.size(); i++)
-	{
-		std::cout << vect2.at(i) << std::endl;
-	}
-
 #pragma endregion
 
-
+#pragma region Testing Component::contains()
 	//// Drawing the contained components
 	//for (int i = 0; i < components.size(); i++)
 	//{
@@ -267,6 +256,7 @@ int main(int argc, const char** argv)
 	//		}
 	//	}
 	//}
+#pragma endregion
 
 #pragma region Debugging .contains()
 	//// t in "State 2"
@@ -289,7 +279,7 @@ int main(int argc, const char** argv)
 	cv::Mat z = component_detector.getLabeledImage();
 
 	cv::namedWindow("Labels", 1);
-	cv::imshow("Labels", (z == (components.at(12).getLabel())));
+	cv::imshow("Labels", (z == (components.at(10).m_label) | z == (components.at(13).m_label)));
 
 	//std::cout << (z == 1) << std::endl;
 
