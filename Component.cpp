@@ -61,3 +61,23 @@ int Component::getLabel()
 {
 	return m_label;
 }
+
+bool Component::equals(Component t_component)
+{
+	return m_label == t_component.getLabel();
+}
+
+bool Component::operator<(Component & t_right)
+{
+	return getLabel() < t_right.getLabel();
+}
+
+bool operator==(Component t_left, Component t_right)
+{
+	return t_left.getLabel() == t_right.getLabel();
+}
+
+bool operator<(Component t_left, Component t_right)
+{
+	return t_left.getLabel() < t_right.getLabel();
+}

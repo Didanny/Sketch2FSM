@@ -8,13 +8,13 @@
 class Component
 {
 private:
-	int m_label;
 	cv::Rect m_bounding_box; // The bounding box of a component
 	int m_area; // The area of the component in pixels
 	cv::Point m_centroid; // The centroid of the components
 	bool m_is_enclosed; // true if component is entirely within another component
 	Component* m_container; // The smallest component that encloses this component
 public:
+	int m_label;
 	Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy, int t_label); // Constructor
 	~Component(); // Destructor
 	cv::Rect getBoundingBox(); // Returns the bounding box of the component
@@ -25,4 +25,9 @@ public:
 	cv::Point getCentroid(); // Returns the centroid
 	Component copy(); // Returns a copy of the component
 	int getLabel(); // Returns label
+	bool equals(Component t_component); // Returns true if equal
+	bool operator<(Component& t_right); // Returns true if label less than
 };
+
+bool operator== (Component t_lhs, Component t_right); // Returns true if equal
+bool operator< (Component t_lhs, Component t_right); // Returns true if label less than, no logical purpose just to enable sorting
