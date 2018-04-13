@@ -233,8 +233,14 @@ int main(int argc, const char** argv)
 	CircleClassifier circle_classifier(component_detector.getLabeledImage());
 	circle_classifier.initContainers(components);
 	containers = circle_classifier.getContainers();
+	circle_classifier.showCircles();
 
 	std::cout << containers.size() << std::endl;
+#if 0
+	Containers circles = circle_classifier.findCircles();
+	std::vector<int> labels;
+	for (int i = 0; i < circles.size(); )
+#endif
 
 	// The 1 in "State 1"
 	cv::rectangle(img, components.at(12).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
@@ -278,8 +284,8 @@ int main(int argc, const char** argv)
 
 	cv::Mat z = component_detector.getLabeledImage();
 
-	cv::namedWindow("Labels", 1);
-	cv::imshow("Labels", (z == (components.at(10).m_label) | z == (components.at(13).m_label)));
+	//cv::namedWindow("Labels", 1);
+	//cv::imshow("Labels", (z == (components.at(10).m_label) | z == (components.at(13).m_label)));
 
 	//std::cout << (z == 1) << std::endl;
 
