@@ -15,4 +15,6 @@ public:
 	void initContainers(Components t_components); // initializes the containers
 	bool isCircle(Container t_container); // returns true if the container is in fact a circle
 	Containers getContainers(); // Returns containers
+	Containers findCircles(); // Returns the containers that are circles
+	void showCircles(); // Shows the circles in new window
 };

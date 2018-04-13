@@ -36,10 +36,57 @@ void CircleClassifier::initContainers(Components t_components)
 
 bool CircleClassifier::isCircle(Container t_container)
 {
-	return false;
+	Component child = t_container.getChildren().at(0);
+	int origin_x = child.getBoundingBox().x;
+	int origin_y = child.getBoundingBox().y;
+	int parent_label = t_container.m_container->getLabel();
+
+	int i, j;
+	i = j = origin_y;
+
+	bool bounded_above = false;
+	bool bounded_below = false;
+
+	while (i < m_labeled_image.rows)
+	{
+		if (parent_label == m_labeled_image.at<int>(origin_y, i)) bounded_below = true;
+		i++;
+	}
+	while (j > 0)
+	{
+		if (parent_label == m_labeled_image.at<int>(origin_y, j)) bounded_above = true;
+		j--;
+	}
+	
+	return bounded_above & bounded_below;
 }
 
 Containers CircleClassifier::getContainers()
 {
 	return m_containers;
+}
+
+Containers CircleClassifier::findCircles()
+{
+	Containers circles;
+	for (int i = 0; i < m_containers.size(); i++)
+	{
+		if (m_containers.at(i).isCircle())
+		{
+			circles.push_back(m_containers.at(i));
+		}
+	}
+	return circles;
+}
+
+void CircleClassifier::showCircles()
+{
+	cv::Mat circles_image = m_labeled_image == findCircles().at(0).m_container->getLabel();
+	for (int i = 1; i < findCircles().size(); i++)
+	{
+		//circles_image = circles_image | (circles_image == findCircles().at(i).m_container->getLabel());
+	}
+	cv::namedWindow("Circles", 1);
+	cv::imshow("Circles", circles_image);
+	cv::waitKey(0);
 }
