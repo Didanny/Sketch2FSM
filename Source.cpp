@@ -216,7 +216,7 @@ int main(int argc, const char** argv)
 	component_detector.detectComponents();
 
 	//Components components = component_detector.getComponents();
-	
+
 	//for (int i = 0; i < components.size(); i++)
 	//{
 	//	cv::rectangle(img, components.at(i).getBoundingBox(), cv::Scalar(200,0,0), 3);
@@ -232,15 +232,114 @@ int main(int argc, const char** argv)
 
 	CircleClassifier circle_classifier(component_detector.getLabeledImage());
 	circle_classifier.initContainers(components);
+	//circle_classifier.initChildren(components);
 	containers = circle_classifier.getContainers();
-	circle_classifier.showCircles();
+	circle_classifier.displayContainerLabels();
+	//circle_classifier.showCircles();
 
-	std::cout << containers.size() << std::endl;
+	std::vector<int> labels;
+	int l = 0;
+	for (int i = 0; i < containers.at(l).getChildren().size(); i++)
+	{
+		labels.push_back(containers.at(l).getChildren().at(i).m_label);
+	}
+
+	cv::Mat z = component_detector.getLabeledImage();
+
+	cv::Mat x = z == containers.at(l).m_container->m_label;
+	for (int i = 0; i < labels.size(); i++)
+	{
+		x = x | (z == labels.at(i));
+	}
+
+
+	cv::Mat dst = cv::Mat(img.size(), CV_8UC3);
+	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 255, 0) };
+
+	for (int r = 0; r < dst.rows; ++r) {
+		for (int c = 0; c < dst.cols; ++c) {
+			int label = z.at<int>(r, c);
+			cv::Vec3b &pixel = dst.at<cv::Vec3b>(r, c);
+			pixel = colors[std::min(label, 1)];
+		}
+	}
+
+	cv::imshow("Labels", dst);
+
 #if 0
+	std::vector<int> labels;
+	for (int i = 0; i < components.size(); i++)
+	{
+		//std::cout << components.at(i).isContainer() << std::endl;
+	}
+	for (int i = 0; i < components.size(); i++)
+	{
+		//if (components.at(i).isContainer()) labels.push_back(components.at(i).m_label);
+	}
+
+	for (int i = 0; i < components.size(); i++)
+	{
+		for (int j = 0; j < containers.size(); j++)
+		{
+			if (components.at(i).getContainer() != NULL && components.at(i).getContainer()->m_label == containers.at(j).m_container->m_label)
+			{
+				containers.at(j).addChild(components.at(i));
+			}
+		}
+	}
+
+	for (int i = 0; i < components.size(); i++)
+	{
+		std::cout << "component " << i << std::endl;
+		if (components.at(i).getContainer() == NULL)
+		{
+			std::cout << "--NULL" << std::endl;
+		}
+		else 
+		{
+			std::cout << "--YES--" << components.at(i).getContainer()->getLabel() << std::endl;
+		}
+	}
+	std::cout << "\n\n\n";
+
+	for (int i = 0; i < components.size(); i++)
+	{
+		if (components.at(i).getContainer() != NULL)
+		{
+			std::cout << "my_container=" << components.at(i).getContainer()->getLabel();
+			for (int j = 0; j < containers.size(); j++)
+			{
+				std::cout << "---container=" << containers.at(j).m_container->getLabel() << std::endl;
+				if (containers.at(j).m_container->getLabel() == components.at(i).getContainer()->getLabel())
+				{
+					containers.at(j).addChild(components.at(i));
+				}
+			}
+		}
+	}
+#endif
+
+	//int l = 0;
+	//for (int i = 0; i < containers.at(i).getChildren().size(); i++)
+	//{
+	//	labels.push_back(containers.at(i).getChildren().at(i).m_label);
+	//}
+
+
+#pragma region Circle Detector (BROKEN)
+#if 0
+
+	std::cout << "Circles" << std::endl;
 	Containers circles = circle_classifier.findCircles();
 	std::vector<int> labels;
-	for (int i = 0; i < circles.size(); )
+	for (int i = 0; i < circles.size(); i++)
+	{
+		std::cout << circles.at(i).m_container->getLabel() << std::endl;
+	}
+
 #endif
+#pragma endregion
+
 
 	// The 1 in "State 1"
 	cv::rectangle(img, components.at(12).getBoundingBox(), cv::Scalar(200, 0, 0), 3);
@@ -277,6 +376,11 @@ int main(int argc, const char** argv)
 	//std::cout << components.at(10).contains(components.at(4)) << std::endl;
 #pragma endregion
 
+#pragma region Debugging CircleClassifier
+
+#pragma endregion
+
+#if 0
 	cv::Mat y = image_processor.forComponentDetector();
 
 	cv::namedWindow("Image3", 1);
@@ -285,11 +389,32 @@ int main(int argc, const char** argv)
 	cv::Mat z = component_detector.getLabeledImage();
 
 	//cv::namedWindow("Labels", 1);
-	//cv::imshow("Labels", (z == (components.at(10).m_label) | z == (components.at(13).m_label)));
+	//cv::imshow("Labels", (z == (7) | z == (8) | z == (10) | z == (26)));
+
+	//Container big_circle = containers.at(0);
+	//Container other_circle = containers.at(1);
+	//Container small_circle = containers.at(2);
+	//Container arrow = containers.at(3);
+
+
+
+	//std::cout << big_circle.getChildren().size() << std::endl;
+	//std::cout << other_circle.getChildren().size() << std::endl;
+	//std::cout << small_circle.getChildren().size() << std::endl;
+	//std::cout << arrow.getChildren().size() << std::endl;
+
+	cv::Mat x = z == labels.at(0);
+	for (int i = 0; i < labels.size(); i++)
+	{
+		x = x | (z == labels.at(i));
+	}
+	cv::imshow("Labels", x);
+	x = x | (z == containers.at(l).m_container->m_label);
 
 	//std::cout << (z == 1) << std::endl;
-
+#endif
 	cv::waitKey(0);
+	system("pause");
 
 #if 0
 	//if (img.empty())
