@@ -13,6 +13,7 @@ private:
 	cv::Point m_centroid; // The centroid of the components
 	bool m_is_enclosed; // true if component is entirely within another component
 	Component* m_container; // The smallest component that encloses this component
+	bool m_is_container; // true if component is container
 public:
 	int m_label;
 	Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy, int t_label); // Constructor
@@ -27,6 +28,8 @@ public:
 	int getLabel(); // Returns label
 	bool equals(Component t_component); // Returns true if equal
 	bool operator<(Component& t_right); // Returns true if label less than
+	void setAsContainer(); // Sets the surrent component as a container
+	bool isContainer(); // Returns true if component is container
 };
 
 bool operator== (Component t_lhs, Component t_right); // Returns true if equal
