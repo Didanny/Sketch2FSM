@@ -15,7 +15,11 @@ public:
 	Components getChildren(); // Returns m_children
 	void addChild(Component& t_child); // Adds child to m_children
 	bool isCircle(); // Returns true if container is in fact a circle
+	cv::Mat containerImage(); // Returns an image of just the container and the children
+	std::vector<int> getChildLabels(); // Returns vector of child labels
 };
+
+bool operator== (int t_left, std::vector<int> t_right);
 
 struct less_than_label
 {
