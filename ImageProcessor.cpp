@@ -2,7 +2,7 @@
 
 ImageProcessor::ImageProcessor(std::string t_imagePath)
 {
-	m_image = cv::imread(t_imagePath);
+	m_image = cv::imread(t_imagePath, 0);
 }
 
 ImageProcessor::~ImageProcessor() {}
@@ -22,7 +22,32 @@ cv::Mat ImageProcessor::forCircleDetector()
 
 cv::Mat ImageProcessor::forComponentDetector()
 {
-	cv::Mat binary_image;
-	cv::threshold(m_image, binary_image, 170, 255, cv::THRESH_BINARY);
+	cv::Mat binary_image = m_image.clone();
+	cv::threshold(binary_image, binary_image, 170, 255, cv::THRESH_BINARY);
 	return binary_image;
+}
+
+cv::Mat ImageProcessor::containerImage(Container & t_container, cv::Mat t_labeled_image)
+{
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_container.m_container->getBoundingBox());
+
+	cv::Mat container_image = cv::Mat(labeled_image.size(), CV_8UC3);
+	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
+	for (int r = 0; r < container_image.rows; ++r)
+	{
+		for (int c = 0; c < container_image.cols; ++c)
+		{
+			int label = labeled_image.at<int>(r, c);
+			cv::Vec3b &pixel = container_image.at<cv::Vec3b>(r, c);
+			if (label == t_container.m_container->m_label || label == t_container.getChildLabels())
+			{
+				pixel = colors[1];
+			}
+			else
+			{
+				pixel = colors[0];
+			}
+		}
+	}
+	return container_image;
 }
