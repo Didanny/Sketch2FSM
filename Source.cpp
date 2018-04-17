@@ -212,7 +212,8 @@ int main(int argc, const char** argv)
 	cv::threshold(img, img, 170, 255, cv::THRESH_BINARY);
 
 	ImageProcessor image_processor("./../../test2.jpg");
-	ComponentDetector component_detector(img /*image_processor.forComponentDetector()*/);
+	cv::imshow("ImgProcessor", image_processor.forComponentDetector());
+	ComponentDetector component_detector(image_processor.forComponentDetector());
 	component_detector.detectComponents();
 
 	//Components components = component_detector.getComponents();
@@ -265,6 +266,22 @@ int main(int argc, const char** argv)
 	}
 
 	cv::imshow("Labels", dst);
+	cv::imshow("Container", image_processor.containerImage(containers.at(3), component_detector.m_labeled_image));
+
+	cv::Mat src, src_gray, canny_output;
+	src = image_processor.containerImage(containers.at(3), component_detector.m_labeled_image);
+	cv::cvtColor(src, src_gray, CV_BGR2GRAY);
+	cv::blur(src_gray, src_gray, cv::Size(3, 3));
+
+	cv::Canny(src_gray, canny_output, 100, 200, 3);
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarchy;
+	cv::findContours(canny_output, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+
+	for (int i = 0; i < hierarchy.size(); i++)
+	{
+		std::cout << "[" << hierarchy.at(i)[0] << "," << hierarchy.at(i)[1] << "," << hierarchy.at(i)[2] << "," << hierarchy.at(i)[3] << "]\n";
+	}
 
 #if 0
 	std::vector<int> labels;
