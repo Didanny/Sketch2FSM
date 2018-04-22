@@ -128,7 +128,7 @@ double ComponentsWithStats::getStdevWidth()
 
 void ComponentsWithStats::findChars(Components& t_components)
 {
-	int tolerance = 5;
+	int tolerance = 6;
 	double min_width = getMeanWidth() - tolerance * getStdevWidth();
 	double max_width = getMeanWidth() + tolerance * getStdevWidth();
 	double min_height = getMeanHeight() - tolerance * getStdevHeight();
