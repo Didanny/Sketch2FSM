@@ -1,4 +1,5 @@
 #include "ImageProcessor.h"
+#include <iostream>
 
 ImageProcessor::ImageProcessor(std::string t_imagePath)
 {
@@ -50,4 +51,18 @@ cv::Mat ImageProcessor::containerImage(Container & t_container, cv::Mat t_labele
 		}
 	}
 	return container_image;
+}
+
+std::vector<cv::Vec4i> ImageProcessor::getHierarchy(Container& t_container, cv::Mat t_labeled_image)
+{
+	cv::Mat image, image_gray, canny_output;
+	image = containerImage(t_container, t_labeled_image);
+	cv::cvtColor(image, image_gray, CV_BGR2GRAY);
+	cv::blur(image_gray, image_gray, cv::Size(3, 3));
+	cv::Canny(image_gray, canny_output, 100, 200, 3);
+	std::vector<std::vector<cv::Point>> contours;
+	std::vector<cv::Vec4i> hierarchy;
+	cv::findContours(canny_output, contours, hierarchy, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
+
+	return hierarchy;
 }
