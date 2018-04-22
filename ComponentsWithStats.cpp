@@ -128,10 +128,11 @@ double ComponentsWithStats::getStdevWidth()
 
 void ComponentsWithStats::findChars(Components& t_components)
 {
-	double min_width = getMeanWidth() - 2 * getStdevWidth();
-	double max_width = getMeanWidth() + 2 * getStdevWidth();
-	double min_height = getMeanHeight() - 2 * getStdevHeight();
-	double max_height = getMeanHeight() + 2 * getStdevHeight();
+	int tolerance = 5;
+	double min_width = getMeanWidth() - tolerance * getStdevWidth();
+	double max_width = getMeanWidth() + tolerance * getStdevWidth();
+	double min_height = getMeanHeight() - tolerance * getStdevHeight();
+	double max_height = getMeanHeight() + tolerance * getStdevHeight();
 	for (int i = 0; i < t_components.size(); i++)
 	{
 		int height = t_components.at(i).getBoundingBox().height;
