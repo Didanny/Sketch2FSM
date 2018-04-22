@@ -120,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="CircleClassifier.cpp" />
     <ClCompile Include="CircleDetector.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -130,6 +131,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="CircleClassifier.h" />
     <ClInclude Include="CircleDetector.h" />
     <ClInclude Include="Component.h" />
