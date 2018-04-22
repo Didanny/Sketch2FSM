@@ -34,20 +34,6 @@ void CircleClassifier::initContainers(Components& t_components)
 		}
 	}
 	initChildren(t_components);
-
-	//std::sort(m_containers.begin(), m_containers.end(), less_than_label());
-	//std::cout << "After std::sort" << std::endl;
-	//for (int i = 0; i < m_containers.size(); i++)
-	//{
-	//	std::cout << m_containers.at(i).m_container->m_label << std::endl;
-	//}
-	//m_containers.erase(std::unique(m_containers.begin(), m_containers.end(), equal_label()), m_containers.end());
-	//std::cout << "After std::unique" << std::endl;
-	//for (int i = 0; i < m_containers.size(); i++)
-	//{
-	//	std::cout << m_containers.at(i).m_container->m_label << std::endl;
-	//}
-	//std::cout << "Done" << std::endl;
 }
 
 void CircleClassifier::initChildren(Components& t_components)
@@ -69,8 +55,17 @@ void CircleClassifier::initChildren(Components& t_components)
 	}
 }
 
-bool CircleClassifier::isCircle(Container t_container)
+bool CircleClassifier::isCircle(Container t_container, std::vector<cv::Vec4i>& t_hierarchy)
 {
+	for (int i = 0; i < t_hierarchy.size(); i++)
+	{
+		if (t_hierarchy.at(i)[2] != -1)
+		{
+			return true;
+		}
+	}
+	return false;
+#if 0
 	Component child = t_container.getChildren().at(0);
 	int origin_x = child.getBoundingBox().x;
 	int origin_y = child.getBoundingBox().y;
@@ -122,6 +117,7 @@ bool CircleClassifier::isCircle(Container t_container)
 	}
 	imwrite("./circle_test.jpg", dst);
 	return bounded_above && bounded_below;
+#endif
 }
 
 Containers CircleClassifier::getContainers()
@@ -129,12 +125,18 @@ Containers CircleClassifier::getContainers()
 	return m_containers;
 }
 
-Containers CircleClassifier::findCircles()
+Containers CircleClassifier::findCircles(ImageProcessor& t_image_processor, ComponentDetector& t_component_detector)
 {
 	Containers circles;
 	for (int i = 0; i < m_containers.size(); i++)
 	{
-		if (isCircle(m_containers.at(i)))
+		std::vector<cv::Vec4i> hierarchy = t_image_processor.getHierarchy(m_containers.at(i), t_component_detector.m_labeled_image);
+		std::cout << "HIERARCHY AT " << i << std::endl;
+		for (int i = 0; i < hierarchy.size(); i++)
+		{
+			std::cout << "[" << hierarchy.at(i)[0] << "," << hierarchy.at(i)[1] << "," << hierarchy.at(i)[2] << "," << hierarchy.at(i)[3] << "]\n";
+		}
+		if (isCircle(m_containers.at(i), hierarchy))
 		{
 			circles.push_back(m_containers.at(i));
 		}
@@ -144,6 +146,7 @@ Containers CircleClassifier::findCircles()
 
 void CircleClassifier::showCircles()
 {
+#if 0
 	cv::Mat circles_image = m_labeled_image == findCircles().at(0).m_container->getLabel();
 	for (int i = 1; i < findCircles().size(); i++)
 	{
@@ -152,6 +155,7 @@ void CircleClassifier::showCircles()
 	cv::namedWindow("Circles", 1);
 	cv::imshow("Circles", circles_image);
 	cv::waitKey(0);
+#endif
 }
 
 void CircleClassifier::displayContainerLabels()

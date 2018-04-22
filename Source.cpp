@@ -286,12 +286,12 @@ int main(int argc, const char** argv)
 #endif
 
 	std::vector<cv::Vec4i> hierarchy = image_processor.getHierarchy(containers.at(1), component_detector.m_labeled_image);
-	for (int i = 0; i < hierarchy.size(); i++)
+
+	Containers circles = circle_classifier.findCircles(image_processor, component_detector);
+	for (int i = 0; i < circles.size(); i++)
 	{
-		std::cout << "[" << hierarchy.at(i)[0] << "," << hierarchy.at(i)[1] << "," << hierarchy.at(i)[2] << "," << hierarchy.at(i)[3] << "]\n";
+		std::cout << circles.at(i).m_container->getLabel() << "\n";
 	}
-
-
 
 #if 0
 	std::vector<int> labels;
