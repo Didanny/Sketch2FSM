@@ -268,6 +268,7 @@ int main(int argc, const char** argv)
 	cv::imshow("Labels", dst);
 	cv::imshow("Container", image_processor.containerImage(containers.at(3), component_detector.m_labeled_image));
 
+#if 0
 	cv::Mat src, src_gray, canny_output;
 	src = image_processor.containerImage(containers.at(3), component_detector.m_labeled_image);
 	cv::cvtColor(src, src_gray, CV_BGR2GRAY);
@@ -282,6 +283,15 @@ int main(int argc, const char** argv)
 	{
 		std::cout << "[" << hierarchy.at(i)[0] << "," << hierarchy.at(i)[1] << "," << hierarchy.at(i)[2] << "," << hierarchy.at(i)[3] << "]\n";
 	}
+#endif
+
+	std::vector<cv::Vec4i> hierarchy = image_processor.getHierarchy(containers.at(1), component_detector.m_labeled_image);
+	for (int i = 0; i < hierarchy.size(); i++)
+	{
+		std::cout << "[" << hierarchy.at(i)[0] << "," << hierarchy.at(i)[1] << "," << hierarchy.at(i)[2] << "," << hierarchy.at(i)[3] << "]\n";
+	}
+
+
 
 #if 0
 	std::vector<int> labels;
