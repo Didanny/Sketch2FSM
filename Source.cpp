@@ -152,6 +152,7 @@
 #include <iostream>
 #include "ImageProcessor.h"
 #include "CircleClassifier.h"
+#include "Circle.h"
 
 //using namespace cv;
 //using namespace std;
@@ -238,21 +239,8 @@ int main(int argc, const char** argv)
 	circle_classifier.displayContainerLabels();
 	//circle_classifier.showCircles();
 
-	std::vector<int> labels;
-	int l = 0;
-	for (int i = 0; i < containers.at(l).getChildren().size(); i++)
-	{
-		labels.push_back(containers.at(l).getChildren().at(i).m_label);
-	}
 
-	cv::Mat z = component_detector.getLabeledImage();
-
-	cv::Mat x = z == containers.at(l).m_container->m_label;
-	for (int i = 0; i < labels.size(); i++)
-	{
-		x = x | (z == labels.at(i));
-	}
-
+#if 0
 
 	cv::Mat dst = cv::Mat(img.size(), CV_8UC3);
 	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 255, 0) };
@@ -266,7 +254,9 @@ int main(int argc, const char** argv)
 	}
 
 	cv::imshow("Labels", dst);
-	cv::imshow("Container", image_processor.containerImage(containers.at(3), component_detector.m_labeled_image));
+
+#endif
+	//cv::imshow("Container", image_processor.containerImage(containers.at(3), component_detector.m_labeled_image));
 
 #if 0
 	cv::Mat src, src_gray, canny_output;
@@ -287,11 +277,35 @@ int main(int argc, const char** argv)
 
 	std::vector<cv::Vec4i> hierarchy = image_processor.getHierarchy(containers.at(1), component_detector.m_labeled_image);
 
-	Containers circles = circle_classifier.findCircles(image_processor, component_detector);
-	for (int i = 0; i < circles.size(); i++)
+	Containers circles_t = circle_classifier.findCircles(image_processor, component_detector);
+	for (int i = 0; i < circles_t.size(); i++)
 	{
-		std::cout << circles.at(i).m_container->getLabel() << "\n";
+		std::cout << circles_t.at(i).m_container->getLabel() << "\n";
 	}
+
+	Circles circles(circle_classifier.findCircles(image_processor, component_detector));
+
+	std::vector<int> labels;
+
+	ComponentsWithStats chars = circles.getChars();
+	chars.findChars(components);
+	for (int i = 0; i < chars.size(); i++)
+	{
+		labels.push_back(chars.at(i).getLabel());
+	}
+
+	std::cout << chars.getMeanHeight() << " stdev: " << chars.getStdevHeight() << std::endl;
+	std::cout << chars.getMeanWidth() << " stdev: " << chars.getStdevWidth() << std::endl;
+
+	cv::Mat z = component_detector.getLabeledImage();
+
+	cv::Mat x = z == labels.at(0);
+	for (int i = 0; i < labels.size(); i++)
+	{
+		x = x | (z == labels.at(i));
+	}
+	cv::imshow("X", x);
+	cv::waitKey(0);
 
 #if 0
 	std::vector<int> labels;
