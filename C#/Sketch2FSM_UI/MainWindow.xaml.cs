@@ -24,5 +24,30 @@ namespace Sketch2FSM_UI
         {
             InitializeComponent();
         }
+
+        public void ImagePanel_Drop(object sender, DragEventArgs e)
+        {
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                // Can have more than one file
+                string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
+                // Setting label content to full path of file
+                TestLabel.Content = files[0].ToString();
+
+                Image i = new Image();
+                BitmapImage src = new BitmapImage();
+                src.BeginInit();
+                src.UriSource = new Uri(files[0].ToString(), UriKind.Relative);
+                src.CacheOption = BitmapCacheOption.OnLoad;
+                src.EndInit();
+                i.Source = src;
+                i.Stretch = Stretch.Uniform;
+                //int q = src.PixelHeight;        // Image loads here
+                sp.Children.Add(i);
+                ImagePanel.Height = 0;
+            }
+        }
     }
 }

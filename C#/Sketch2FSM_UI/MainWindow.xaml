@@ -5,8 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sketch2FSM_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="MainWindow" Height="450" Width="600">
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="1" >Sketch2FSM</Label>
+        </Grid>
+        <Label Padding="50 0">Drag and drop your image below</Label>
+        <StackPanel Height="100" Background="#ebeef4" Margin="50 10"
+                    Name="ImagePanel" Drop="ImagePanel_Drop" AllowDrop="true">
+            
+        </StackPanel>
+        <Label Name="TestLabel"></Label>
+        <StackPanel Name="sp">
+        </StackPanel>
+    </StackPanel>
 </Window>
