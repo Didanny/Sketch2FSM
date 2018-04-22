@@ -131,11 +131,11 @@ Containers CircleClassifier::findCircles(ImageProcessor& t_image_processor, Comp
 	for (int i = 0; i < m_containers.size(); i++)
 	{
 		std::vector<cv::Vec4i> hierarchy = t_image_processor.getHierarchy(m_containers.at(i), t_component_detector.m_labeled_image);
-		std::cout << "HIERARCHY AT " << i << std::endl;
-		for (int i = 0; i < hierarchy.size(); i++)
-		{
-			std::cout << "[" << hierarchy.at(i)[0] << "," << hierarchy.at(i)[1] << "," << hierarchy.at(i)[2] << "," << hierarchy.at(i)[3] << "]\n";
-		}
+		//std::cout << "HIERARCHY AT " << i << std::endl;
+		//for (int i = 0; i < hierarchy.size(); i++)
+		//{
+		//	std::cout << "[" << hierarchy.at(i)[0] << "," << hierarchy.at(i)[1] << "," << hierarchy.at(i)[2] << "," << hierarchy.at(i)[3] << "]\n";
+		//}
 		if (isCircle(m_containers.at(i), hierarchy))
 		{
 			circles.push_back(m_containers.at(i));
