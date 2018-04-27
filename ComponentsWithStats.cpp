@@ -141,6 +141,7 @@ void ComponentsWithStats::findChars(Components& t_components)
 			width >= min_width && width <= max_width &&
 			height >= min_height && height <= max_height)
 		{
+			t_components.at(i).setClassified();
 			push_back(t_components.at(i));
 		}
 	}

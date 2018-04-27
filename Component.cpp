@@ -2,7 +2,7 @@
 
 // Constructor
 Component::Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy, int t_label)
-	: m_area(t_area), m_container(NULL), m_label(t_label), m_is_container(false)
+	: m_area(t_area), m_container(NULL), m_label(t_label), m_is_container(false), m_is_classified(false)
 {
 	m_bounding_box = cv::Rect(t_x, t_y, t_width, t_height);
 	m_centroid = cv::Point(t_cx, t_cy);
@@ -80,6 +80,16 @@ void Component::setAsContainer()
 bool Component::isContainer()
 {
 	return m_is_container;
+}
+
+bool Component::isClassified()
+{
+	return m_is_classified;
+}
+
+void Component::setClassified()
+{
+	m_is_classified = true;
 }
 
 bool operator==(Component t_left, Component t_right)

@@ -138,6 +138,11 @@ Containers CircleClassifier::findCircles(ImageProcessor& t_image_processor, Comp
 		//}
 		if (isCircle(m_containers.at(i), hierarchy))
 		{
+			m_containers.at(i).m_container->setClassified();
+			for (int j = 0; j < m_containers.at(i).getChildren().size(); j++)
+			{
+				m_containers.at(i).getChildren().at(j).setClassified();
+			}
 			circles.push_back(m_containers.at(i));
 		}
 	}

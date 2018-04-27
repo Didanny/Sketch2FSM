@@ -18,6 +18,7 @@ ComponentsWithStats Circles::getChars()
 		for (int j = 0; j < children.size(); j++) 
 		{
 			if (isCircle(children.at(j))) continue;
+			children.at(j).setClassified();
 			chars.push_back(children.at(j));
 		}
 	}
