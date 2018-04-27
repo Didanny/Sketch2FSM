@@ -34,7 +34,7 @@ namespace Sketch2FSM_UI
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
                 // Setting label content to full path of file
-                TestLabel.Content = files[0].ToString();
+                //TestLabel.Content = files[0].ToString();
 
                 Image i = new Image();
                 BitmapImage src = new BitmapImage();
@@ -47,6 +47,9 @@ namespace Sketch2FSM_UI
                 //int q = src.PixelHeight;        // Image loads here
                 sp.Children.Add(i);
                 ImagePanel.Height = 0;
+
+                Canvas.Height = sp.Height;
+                Canvas.Width = sp.Width;
             }
         }
     }
