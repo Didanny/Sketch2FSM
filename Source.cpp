@@ -153,6 +153,12 @@
 #include "ImageProcessor.h"
 #include "CircleClassifier.h"
 #include "Circle.h"
+#include "ArrowClassifier.h"
+#include "Arrow.h"
+//#include <Windows.h>
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include <stack>
 
 //using namespace cv;
 //using namespace std;
@@ -285,26 +291,268 @@ int main(int argc, const char** argv)
 
 	Circles circles(circle_classifier.findCircles(image_processor, component_detector));
 
-	std::vector<int> labels;
-
 	ComponentsWithStats chars = circles.getChars();
 	chars.findChars(components);
-	for (int i = 0; i < chars.size(); i++)
+
+	std::vector<int> labels_all = circles.getLabels();
+	std::vector<int> labels2 = chars.getLabels();
+
+	labels_all.insert(labels_all.end(), labels2.begin(), labels2.end());
+
+	ArrowClassifier arrow_classifier(components, labels_all);
+
+	std::vector<int> labels = arrow_classifier.getLabels();
+	std::cout << "ARROW LABELS:" << "\n";
+	for (int i = 0; i < labels.size(); i++)
 	{
-		labels.push_back(chars.at(i).getLabel());
+		std::cout << labels.at(i) << "\n";
 	}
+
+	//for (int i = 0; i < components.size(); i++)
+	//{
+	//	if (!components.at(i).isClassified()) labels.push_back(components.at(i).getLabel());
+	//}
 
 	std::cout << chars.getMeanHeight() << " stdev: " << chars.getStdevHeight() << std::endl;
 	std::cout << chars.getMeanWidth() << " stdev: " << chars.getStdevWidth() << std::endl;
 
 	cv::Mat z = component_detector.getLabeledImage();
 
-	cv::Mat x = z == labels.at(0);
+	cv::Mat x = z != 0;
 	for (int i = 0; i < labels.size(); i++)
 	{
-		x = x | (z == labels.at(i));
+		x = x & (z != labels.at(i));
 	}
 	cv::imshow("X", x);
+
+
+	cv::imshow("Arrow0", image_processor.componentImage(arrow_classifier.m_arrows.at(0), component_detector.getLabeledImage()));
+	cv::Mat arrow_0 = image_processor.componentImage(arrow_classifier.m_arrows.at(2), component_detector.getLabeledImage());
+
+#pragma region Corners
+	std::vector<cv::Point2f> corners;
+	double qualityLevel = 0.01;
+	double minDistance = 10;
+	int blockSize = 3;
+	bool useHarrisDetector = false;
+	double k = 0.04;
+
+	cv::Mat arrow_grey;
+	cv::cvtColor(arrow_0, arrow_grey, CV_BGR2GRAY);
+
+	goodFeaturesToTrack(arrow_grey,
+		corners,
+		100,
+		qualityLevel,
+		minDistance,
+		cv::Mat(),
+		blockSize,
+		useHarrisDetector,
+		k);
+
+	cv::RNG rng(12345);
+	cv::Mat arrow_0copy;
+	arrow_0.copyTo(arrow_0copy);
+	std::cout << "** Number of corners detected: " << corners.size() << std::endl;
+	int r = 4;
+
+#if 1
+	// Drawing the corners
+	for (int i = 0; i < corners.size(); i++)
+	{
+		circle(arrow_0copy, corners[i], r, cv::Scalar(0,0,255), -1, 8, 0);
+		if (i == 0) circle(arrow_0copy, corners[i], r, cv::Scalar(0, 255, 0), -1, 8, 0);
+		std::cout << corners[i].x << ":" << corners[i].y << "\n";
+	}
+#endif
+#pragma endregion
+
+
+	std::vector<bool> visited;
+	
+	// Initializing visited
+	for (int i = 0; i < corners.size(); i++)
+	{
+		visited.push_back(false);
+	}
+
+	// Finding the nearest point
+	Arrow arrow0(corners);
+	arrow0.initArrow();
+
+#if 1
+	cv::circle(arrow_0copy, arrow0.m_start, r, cv::Scalar(0, 255, 0), -1, 8, 0);
+	cv::circle(arrow_0copy, arrow0.m_end, r, cv::Scalar(0, 0, 255), -1, 8, 0);
+	cv::circle(arrow_0copy, arrow0.start2, r, cv::Scalar(255, 0, 0), -1, 8, 0);
+#endif
+	int index;
+	//arrow0.getNearestPoint(corners[0], index);
+
+
+#if 0
+	cv::Point2f current_point = corners[0];
+	cv::Point2f nearest_point;
+	float min_distance = 99999999;
+	for (int i = 0; i < corners.size(); i++)
+	{
+		if (visited.at(i) || current_point == corners.at(i)) continue;
+
+		cv::Point2f next_point = corners.at(i);
+		visited.at(i) = true;
+		float current_distance = sqrt(pow((current_point.x - next_point.x), 2) + pow((current_point.y - next_point.y), 2));
+
+		if (current_distance < min_distance)
+		{
+			min_distance = current_distance;
+			nearest_point = next_point;
+		}
+	}
+#endif
+
+#if 0
+	//cv::approxPolyDP(corners, arrow_0copy, 10, true);
+
+
+	//cv::line(arrow_0copy, corners[0], corners[index], cv::Scalar(0, 255, 0));
+	cv::Point2f current_point = arrow0.m_corners.at(0);
+	cv::Point2f next_point;
+	int next_index = arrow0.getNearestPoint(current_point);
+	double previous_slope;
+	double current_slope;
+	previous_slope = 0;
+	bool first = true;
+	std::vector<cv::Point2f> ends;
+	std::cout << "RATIOS:\n";
+	double max_angle = 0;
+	std::stack<cv::Point2f> end_stack;
+	int end_index = 0;
+	while (next_index < arrow0.m_corners.size() && next_index > -1)
+	{
+		//if (arrow0.m_visited.at(i)) continue;
+		next_point = arrow0.m_corners.at(next_index);
+		arrow0.m_visited.at(next_index) = true;
+
+		current_slope = (next_point.y - current_point.y) / (next_point.x - current_point.x);
+		std::cout << "slope=" << current_slope << "\n";
+		cv::line(arrow_0copy, current_point, next_point, cv::Scalar(0, 255, 0));
+		current_point = next_point;
+		next_index = arrow0.getNearestPoint(current_point);
+
+		double angle;
+		if (!first) 
+		{
+			angle = abs(atan((current_slope - previous_slope) / (1 + (current_slope * previous_slope))));
+			std::cout << angle << "\n";
+			if (angle > max_angle)
+			{
+				end_stack.push(current_point);
+			}
+			//if (angle > 1.39 && angle < 1.75)
+			//{
+			//	ends.push_back(current_point);
+			//	circle(arrow_0copy, current_point, r, cv::Scalar(255, 0, 0), -1, 8, 0);
+			//}
+		}
+		first = false;
+		previous_slope = current_slope;
+		end_index++;
+	}
+	float sum_x = 0;
+	float sum_y = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		circle(arrow_0copy, end_stack.top(), r, cv::Scalar(255, 0, 0), -1, 8, 0);
+		sum_x += end_stack.top().x;
+		sum_y += end_stack.top().y;
+		end_stack.pop();
+	}
+	cv::Point2f end(sum_x / 3, sum_y / 3);
+	cv::Point2f s1 = arrow0.m_corners.at(0);
+	cv::Point2f s2 = arrow0.m_corners.at(end_index - 1);
+	float d1 = sqrt(pow((s1.x - end.x), 2) + pow((s1.y - end.y), 2));
+	float d2 = sqrt(pow((s2.x - end.x), 2) + pow((s2.y - end.y), 2));
+	if (d1 > d2)
+	{
+		// start is s2
+	}
+	else
+	{
+		// start is s1
+	}
+#endif
+
+
+
+
+
+#if 0
+	current_point = corners[1];
+	for (int i = 1; i < corners.size(); i++)
+	{
+		cv::Point2f nearest_point;
+		float min_distance = 99999999;
+		for (int i = 0; i < corners.size(); i++)
+		{
+			if (visited.at(i) || current_point == corners.at(i)) continue;
+
+			cv::Point2f next_point = corners.at(i);
+			visited.at(i) = true;
+			float current_distance = sqrt(pow((current_point.x - next_point.x), 2) + pow((current_point.y - next_point.y), 2));
+
+			if (current_distance < min_distance)
+			{
+				min_distance = current_distance;
+				nearest_point = next_point;
+			}
+		}
+		cv::line(arrow_0copy, current_point, nearest_point, cv::Scalar(0, 255, 0));
+		current_point = nearest_point;
+	}
+#endif
+
+
+
+	// Edge detection
+	cv::Mat dst;
+	//cv::Canny(arrow_0, dst, 50, 200, 3);
+	// Copy edges to the images that will display the results in BGR
+	cv::Mat cdst;
+	cvtColor(dst, cdst, CV_GRAY2BGR);
+
+#if 0
+	std::vector<cv::Vec2f> lines; // will hold the results of the detection
+	cv::HoughLines(dst, lines, 1, CV_PI / 180, 50, 0, 0); // runs the actual detection
+
+	for (size_t i = 0; i < lines.size(); i++)
+	{
+		float rho = lines[i][0], theta = lines[i][1];
+		cv::Point pt1, pt2;
+		double a = cos(theta), b = sin(theta);
+		double x0 = a * rho, y0 = b * rho;
+		pt1.x = cvRound(x0 + 1000 * (-b));
+		pt1.y = cvRound(y0 + 1000 * (a));
+		pt2.x = cvRound(x0 - 1000 * (-b));
+		pt2.y = cvRound(y0 - 1000 * (a));
+		cv::line(cdst, pt1, pt2, cv::Scalar(0, 255, 0), 3, CV_AA);
+	}
+
+
+	std::vector<cv::Vec4i> linesP; // will hold the results of the detection
+	cv::HoughLinesP(dst, linesP, 1, CV_PI / 180, 50, 10, 10); // runs the actual detection
+														  // Draw the lines
+	for (size_t i = 0; i < linesP.size(); i++)
+	{
+		cv::Vec4i l = linesP[i];
+		cv::line(cdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(0, 0, 255), 3, CV_AA);
+	}
+
+	std::cout << "LINES DETECTED: " << linesP.size() << std::endl;
+#endif
+
+
+
+	cv::imshow("Arrow Features", arrow_0copy);
+	//cv::imshow("Arrow Features2", cdst);
 	cv::waitKey(0);
 
 #if 0
@@ -455,6 +703,7 @@ int main(int argc, const char** argv)
 	//std::cout << (z == 1) << std::endl;
 #endif
 	cv::waitKey(0);
+
 	system("pause");
 
 #if 0
