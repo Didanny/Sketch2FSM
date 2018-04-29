@@ -12,4 +12,5 @@ public:
 	~Circles(); // Destructor
 	ComponentsWithStats getChars(); // Returns the known chars aka container children
 	bool isCircle(Component& t_component); // Returns true if the container is a container
+	std::vector<int> getLabels(); // Returns vector of labels of circles
 };

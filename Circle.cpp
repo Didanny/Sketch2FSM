@@ -38,4 +38,14 @@ bool Circles::isCircle(Component & t_component)
 	return false;
 }
 
+std::vector<int> Circles::getLabels()
+{
+	std::vector<int> labels;
+	for (int i = 0; i < m_circles.size(); i++)
+	{
+		labels.push_back(m_circles.at(i).m_container->getLabel());
+	}
+	return labels;
+}
+
 

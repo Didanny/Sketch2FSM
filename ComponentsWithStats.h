@@ -36,4 +36,11 @@ public:
 	double getStdevHeight(); // Returns the standard deviation of the height
 	double getStdevWidth(); // Returns the standard deviation of the width
 	void findChars(Components& t_components);
+	std::vector<int> getLabels(); // Returns vector of labels
 };
+
+//std::vector<int> operator+ (std::vector<int> left, std::vector<int> right)
+//{
+//	left.insert(left.end(), right.begin(), right.end());
+//	return left;
+//}

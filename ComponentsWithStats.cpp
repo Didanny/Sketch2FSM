@@ -146,3 +146,13 @@ void ComponentsWithStats::findChars(Components& t_components)
 		}
 	}
 }
+
+std::vector<int> ComponentsWithStats::getLabels()
+{
+	std::vector<int> labels;
+	for (int i = 0; i < size(); i++)
+	{
+		labels.push_back(at(i).getLabel());
+	}
+	return labels;
+}
