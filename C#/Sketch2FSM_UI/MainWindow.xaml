@@ -5,42 +5,82 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sketch2FSM_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="600">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+        Title="MainWindow" Height="450" Width="800">
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-        <StackPanel Margin="50 0" Grid.Column="0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="1" >Sketch2FSM</Label>
-            </Grid>
-            <Label >Drag and drop your image below</Label>
-            <StackPanel Height="100" Background="#ebeef4"
-                    Name="ImagePanel" Drop="ImagePanel_Drop" AllowDrop="true">
+            <!-- Input Image -->
+            <StackPanel Margin="50 0" Grid.Column="0">
+                <Grid>
+                    <!--
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="1" >Sketch2FSM</Label>
+                    -->
+                    <Label>Sketch2FSM</Label>
+                </Grid>
+                <Label >Drag and drop your image below</Label>
+                <StackPanel Height="100" Background="#ebeef4"
+                        Name="ImagePanel" Drop="ImagePanel_Drop" AllowDrop="true">
 
+                </StackPanel>
+                <StackPanel Name="sp">
+                </StackPanel>
+                <ProgressBar Height="10" Minimum="0" Maximum="100" Value="75"/>
+                <Canvas  Name="Canvas">
+                    <Canvas.Background>
+                        <SolidColorBrush Color="#ebeef4" Opacity="0"/>
+                    </Canvas.Background>
+                </Canvas>
             </StackPanel>
-            <StackPanel Name="sp">
-            </StackPanel>
-            <ProgressBar Height="10" Minimum="0" Maximum="100" Value="75"/>
-            <Canvas  Name="Canvas">
-                <Canvas.Background>
-                    <SolidColorBrush Color="#ebeef4" Opacity="0"/>
-                </Canvas.Background>
-            </Canvas>
-        </StackPanel>
 
-        <StackPanel Grid.Column="1" Margin="0 46 25 0">
-            <Button Margin="0 5">Start</Button>
-            <Label Margin="0 5">Incorrect FSM?</Label>
-            <Button Margin="0 5">Insert State</Button>
-            <Button Margin="0 5">Insert Transition</Button>
-        </StackPanel>
+            <!-- Side Panel -->
+            <StackPanel Grid.Column="1" Margin="0 46 25 0">
+                <Button Margin="0 5">Start</Button>
+                <Label Margin="0 5">Incorrect FSM?</Label>
+                <Button Margin="0 5">Insert State</Button>
+                <Button Margin="0 5">Insert Transition</Button>
+            </StackPanel>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Canvas -->
+            <StackPanel Margin="50 0" Grid.Column="0">
+                
+            </StackPanel>
+            
+            <!-- Side Panel -->
+            <StackPanel Grid.Column="1" Margin="0 20 25 0" Visibility="Hidden">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="1">Current Component</Label>
+                    <Button Grid.Column="0">&lt;&lt;</Button>
+                    <Button Grid.Column="2">&gt;&gt;</Button>
+                </Grid>
+                <Label Margin="0 10 0 0">Label:</Label>
+                <TextBox></TextBox>
+                <Label Margin="0 2 0 0" Visibility="Visible">From:</Label>
+                <TextBox></TextBox>
+                <Label Margin="0 2 0 0" Visibility="Visible">To:</Label>
+                <TextBox></TextBox>
+            </StackPanel>
     </Grid>
+    </StackPanel>
+
 </Window>
