@@ -18,4 +18,5 @@ public:
 	cv::Mat forComponentDetector(); // Returns a processed image for the ComponentDetector object
 	cv::Mat containerImage(Container& t_container, cv::Mat t_labeled_image); // Returns an image of just the container and children
 	std::vector<cv::Vec4i> getHierarchy(Container & t_container, cv::Mat t_labeled_image);
+	cv::Mat componentImage(Component& t_component, cv::Mat t_labeled_image);
 };

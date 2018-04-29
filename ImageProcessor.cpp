@@ -66,3 +66,28 @@ std::vector<cv::Vec4i> ImageProcessor::getHierarchy(Container& t_container, cv::
 
 	return hierarchy;
 }
+
+cv::Mat ImageProcessor::componentImage(Component & t_component, cv::Mat t_labeled_image)
+{
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_component.getBoundingBox());
+
+	cv::Mat component_image = cv::Mat(labeled_image.size(), CV_8UC3);
+	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
+	for (int r = 0; r < component_image.rows; ++r)
+	{
+		for (int c = 0; c < component_image.cols; ++c)
+		{
+			int label = labeled_image.at<int>(r, c);
+			cv::Vec3b &pixel = component_image.at<cv::Vec3b>(r, c);
+			if (label == t_component.getLabel())
+			{
+				pixel = colors[1];
+			}
+			else
+			{
+				pixel = colors[0];
+			}
+		}
+	}
+	return component_image;
+}
