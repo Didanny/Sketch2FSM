@@ -12,7 +12,7 @@ public:
 	Container(Component& t_container); // Constructor
 	Container(Component& t_container, Component& t_child); // Constructor with first child
 	~Container(); // Desctructor
-	Components getChildren(); // Returns m_children
+	Components& getChildren(); // Returns m_children
 	void addChild(Component& t_child); // Adds child to m_children
 	bool isCircle(); // Returns true if container is in fact a circle
 	cv::Mat containerImage(); // Returns an image of just the container and the children

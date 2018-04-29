@@ -13,7 +13,7 @@ Container::Container(Component& t_container, Component& t_child)
 Container::~Container()
 {}
 
-Components Container::getChildren()
+Components& Container::getChildren()
 {
 	return m_children;
 }
