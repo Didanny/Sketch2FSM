@@ -52,5 +52,10 @@ namespace Sketch2FSM_UI
                 Canvas.Width = sp.Width;
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TestBlock.Text = "Clicked";
+        }
     }
 }

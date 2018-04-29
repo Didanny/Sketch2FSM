@@ -43,7 +43,7 @@
 
             <!-- Side Panel -->
             <StackPanel Grid.Column="1" Margin="0 46 25 0">
-                <Button Margin="0 5">Start</Button>
+                <Button Margin="0 5" Click="Button_Click">Start</Button>
                 <Label Margin="0 5">Incorrect FSM?</Label>
                 <Button Margin="0 5">Insert State</Button>
                 <Button Margin="0 5">Insert Transition</Button>
@@ -57,7 +57,7 @@
             
             <!-- Canvas -->
             <StackPanel Margin="50 0" Grid.Column="0">
-                
+                <TextBlock Text="TEST" Name="TestBlock"></TextBlock>
             </StackPanel>
             
             <!-- Side Panel -->
