@@ -92,6 +92,15 @@ cv::Mat ImageProcessor::componentImage(Component & t_component, cv::Mat t_labele
 	return component_image;
 }
 
+cv::Mat ImageProcessor::arrowImage(Arrow & t_arrow, Component & t_component, cv::Mat t_labeled_image)
+{
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_component.getBoundingBox());
+	cv::Mat component_image = componentImage(t_component, t_labeled_image);
+
+	cv::circle(component_image, t_arrow.m_start, 4, cv::Scalar(0, 255, 0), -1, 8, 0);
+	cv::circle(component_image, t_arrow.m_end, 4, cv::Scalar(0, 0, 255), -1, 8, 0);
+}
+
 std::vector<cv::Point2f> ImageProcessor::getFeatures(cv::Mat t_arrow)
 {
 	std::vector<cv::Point2f> corners;
