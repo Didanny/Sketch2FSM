@@ -13,6 +13,7 @@ public:
 	cv::Point2f start2;
 	cv::Point2f m_end;
 	Components m_arrows;
+
 	std::vector<cv::Point2f> m_corners;
 	std::vector<bool> m_visited;
 	Arrow(cv::Point2f, cv::Point2f); // Constructor

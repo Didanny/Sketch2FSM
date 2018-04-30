@@ -45,3 +45,14 @@ cv::Point2f ArrowClassifier::getNearestPoint(cv::Point2f t_point, std::vector<cv
 	//}
 	return cv::Point2f();
 }
+
+void ArrowClassifier::initArrows(ImageProcessor& t_image_processor, ComponentDetector& t_component_detector)
+{
+	for (int i = 0; i < m_arrows.size(); i++)
+	{
+		std::vector<cv::Point2f> corners = t_image_processor.getFeatures(t_image_processor.componentImage(m_arrows.at(i), t_component_detector.getLabeledImage()));
+		Arrow arrow(corners);
+		arrow.initArrow();
+		m_arrows_i.push_back(arrow);
+	}
+}
