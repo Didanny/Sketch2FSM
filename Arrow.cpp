@@ -100,7 +100,7 @@ void Arrow::initArrow()
 	cv::Point2f end(sum_x / 3, sum_y / 3);
 	m_end = end;
 	cv::Point2f s1 = m_corners.at(0);
-	cv::Point2f s2 = m_corners.at(end_index - 1);
+	cv::Point2f s2 = m_corners.at(end_index);
 	float d1 = sqrt(pow((s1.x - end.x), 2) + pow((s1.y - end.y), 2));
 	float d2 = sqrt(pow((s2.x - end.x), 2) + pow((s2.y - end.y), 2));
 	if (d1 > d2)
