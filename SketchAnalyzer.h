@@ -11,7 +11,7 @@ class SketchAnalyzer
 private:
 	//ImageProcessor* m_image_processor;
 public:
-	ImageProcessor * m_image_processor;
+	ImageProcessor* m_image_processor;
 	ComponentDetector* m_component_detector;
 	CircleClassifier* m_circle_classifier;
 	Circles* m_circles;
@@ -21,6 +21,8 @@ public:
 	Components m_components; // Vector of the connected components
 
 	SketchAnalyzer(); // Constructor
+	~SketchAnalyzer(); // Destructor
+
 	void loadImage(std::string t_image_path); // Loads image from given path
 	void findConnectedComponents(); // Detects connected components
 	void findContainers(); // Finds the containers, circle candidates
