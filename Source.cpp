@@ -159,6 +159,17 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <stack>
+//#include "MemoryWriter.h"
+#include <iostream>
+#include <string>
+#include <thread>
+#include "SketchAnalyzer.h"
+
+//#include <stdio.h>
+//#include <WinSock2.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#define PORT 8080
 
 //using namespace cv;
 //using namespace std;
@@ -207,6 +218,60 @@ std::vector<int>& Vect()
 
 int main(int argc, const char** argv)
 {
+
+#pragma region SketchAnalyzer
+
+	SketchAnalyzer sa;
+	sa.loadImage("./../../test2.jpg");
+	cv::imshow("SA IMG", sa.m_image_processor->originalImage());
+	sa.findConnectedComponents();
+	//cv::imshow("SA Labels", sa.m_component_detector->getLabeledImage());
+	sa.findContainers();
+	sa.findCharacters();
+	sa.findArrows();
+
+	std::cout << "CONTAINERS\n";
+	for (int i = 0; i < sa.m_circle_classifier->getContainers().size(); i++)
+	{
+		std::cout << sa.m_circle_classifier->getContainers().at(i).m_container->getLabel() << std::endl;
+	}
+	std::cout << "CIRCLES\n";
+	for (int i = 0; i < sa.m_circles->getLabels().size(); i++)
+	{
+		std::cout << sa.m_circles->getLabels().at(i) << std::endl;
+	}
+	std::cout << "CHARS\n";
+	for (int i = 0; i < sa.m_chars.getLabels().size(); i++)
+	{
+		std::cout << sa.m_chars.getLabels().at(i) << std::endl;
+	}
+	std::cout << "ARROWS\n";
+	//for (int i = 0; i < sa.m_circles->getLabels().size(); i++)
+	//{
+	//	std::cout << sa.m_circles->getLabels().at(i) << std::endl;
+	//}
+
+
+#pragma endregion
+
+#pragma region Try SHMEM
+#if 0
+	std::wstring memoryName{ L"shm_1" };
+	size_t memorySize{ 80 };
+	MemoryWriter writer(memoryName, memorySize);
+
+	while (true) 
+	{
+		std::string data;
+		data = writer.createRandomData();
+		writer.write(data);
+		std::cout << "C++: Written in shm - " << data << std::endl;
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+#endif
+#pragma endregion
+
+
 #pragma region Setup Detector
 	//CommandLineParser parser(argc, argv, keys);
 	//if (parser.has("help"))
@@ -234,14 +299,14 @@ int main(int argc, const char** argv)
 
 #pragma region Finding Containers
 
-	Containers containers;
+	//Containers containers;
 	component_detector.findContainers();
 	Components components = component_detector.getComponents();
 
 	CircleClassifier circle_classifier(component_detector.getLabeledImage());
 	circle_classifier.initContainers(components);
 	//circle_classifier.initChildren(components);
-	containers = circle_classifier.getContainers();
+	//containers = circle_classifier.getContainers();
 	circle_classifier.displayContainerLabels();
 	//circle_classifier.showCircles();
 
@@ -281,7 +346,7 @@ int main(int argc, const char** argv)
 	}
 #endif
 
-	std::vector<cv::Vec4i> hierarchy = image_processor.getHierarchy(containers.at(1), component_detector.m_labeled_image);
+	//std::vector<cv::Vec4i> hierarchy = image_processor.getHierarchy(containers.at(1), component_detector.m_labeled_image);
 
 	Containers circles_t = circle_classifier.findCircles(image_processor, component_detector);
 	for (int i = 0; i < circles_t.size(); i++)
@@ -327,7 +392,7 @@ int main(int argc, const char** argv)
 
 
 	cv::imshow("Arrow0", image_processor.componentImage(arrow_classifier.m_arrows.at(0), component_detector.getLabeledImage()));
-	cv::Mat arrow_0 = image_processor.componentImage(arrow_classifier.m_arrows.at(2), component_detector.getLabeledImage());
+	cv::Mat arrow_0 = image_processor.componentImage(arrow_classifier.m_arrows.at(0), component_detector.getLabeledImage());
 
 #pragma region Corners
 	std::vector<cv::Point2f> corners;
@@ -356,7 +421,7 @@ int main(int argc, const char** argv)
 	std::cout << "** Number of corners detected: " << corners.size() << std::endl;
 	int r = 4;
 
-#if 1
+#if 0
 	// Drawing the corners
 	for (int i = 0; i < corners.size(); i++)
 	{
@@ -378,7 +443,7 @@ int main(int argc, const char** argv)
 
 	// Finding the nearest point
 	Arrow arrow0(corners);
-	arrow0.initArrow();
+	//arrow0.initArrow();
 
 #if 1
 	cv::circle(arrow_0copy, arrow0.m_start, r, cv::Scalar(0, 255, 0), -1, 8, 0);
@@ -414,7 +479,7 @@ int main(int argc, const char** argv)
 
 
 	//cv::line(arrow_0copy, corners[0], corners[index], cv::Scalar(0, 255, 0));
-	cv::Point2f current_point = arrow0.m_corners.at(0);
+	current_point = arrow0.m_corners.at(0);
 	cv::Point2f next_point;
 	int next_index = arrow0.getNearestPoint(current_point);
 	double previous_slope;
