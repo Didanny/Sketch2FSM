@@ -48,4 +48,27 @@ std::vector<int> Circles::getLabels()
 	return labels;
 }
 
+void Circles::initAcceptIndex()
+{
+	for (int i = 0; i < m_circles.size(); i++)
+	{
+		for (int j = 0; j < m_circles.at(i).getChildren().size(); j++)
+		{
+			if (isCircle(m_circles.at(i).getChildren().at(j)))
+			{
+				int child_label = m_circles.at(i).getChildren().at(j).getLabel();
+				m_circles.erase(m_circles.begin() + i);
+				for (int k = 0; k < m_circles.size(); k++)
+				{
+					if (child_label == m_circles.at(k).m_container->getLabel())
+					{
+						m_accept_index = k;
+						return;
+					}
+				}
+			}
+		}
+	}
+}
+
 
