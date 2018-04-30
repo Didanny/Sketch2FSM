@@ -45,6 +45,11 @@ int Arrow::getNearestPoint(cv::Point2f t_point)
 
 void Arrow::initArrow()
 {
+	if (m_corners.size() < 3)
+	{
+		m_start = m_end = m_corners.at(0);
+		return;
+	}
 	cv::Point2f current_point = m_corners.at(0);
 	cv::Point2f next_point;
 	int next_index = getNearestPoint(current_point);
@@ -111,4 +116,5 @@ void Arrow::initArrow()
 	{
 		m_start = s2;
 	}
+	return;
 }
