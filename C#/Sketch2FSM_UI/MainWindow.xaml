@@ -56,7 +56,7 @@
             </Grid.ColumnDefinitions>
             
             <!-- Canvas -->
-            <StackPanel Margin="50 0" Grid.Column="0">
+            <StackPanel Margin="50 0" Grid.Column="0" Background="#ebeef4">
                 <TextBlock Text="TEST" Name="TestBlock"></TextBlock>
             </StackPanel>
             

@@ -56,6 +56,15 @@ namespace Sketch2FSM_UI
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             TestBlock.Text = "Clicked";
+            DrawCircle(0, 0, 0);
+        }
+
+        private void DrawCircle(double radius, double center_x, double center_y)
+        {
+            Ellipse e = new Ellipse();
+            e.Height = 60;
+            e.Width = 60;
+            Canvas.Children.Add(e);
         }
     }
 }
