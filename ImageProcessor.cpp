@@ -91,3 +91,23 @@ cv::Mat ImageProcessor::componentImage(Component & t_component, cv::Mat t_labele
 	}
 	return component_image;
 }
+
+std::vector<cv::Point2f> ImageProcessor::getFeatures(cv::Mat t_arrow)
+{
+	std::vector<cv::Point2f> corners;
+	double qualityLevel = 0.01;
+	double minDistance = 10;
+	int blockSize = 3;
+	bool useHarrisDetector = false;
+	double k = 0.04;
+
+	cv::Mat arrow_grey;
+	cv::cvtColor(t_arrow, arrow_grey, CV_BGR2GRAY);
+
+	goodFeaturesToTrack(arrow_grey, corners, 100, qualityLevel, minDistance, cv::Mat(), blockSize, useHarrisDetector, k);
+
+	//cv::RNG rng(12345);
+	//cv::Mat arrow_0copy;
+	//arrow_0.copyTo(arrow_0copy);
+	return corners;
+}
