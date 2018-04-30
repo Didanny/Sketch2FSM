@@ -4,6 +4,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "Container.h"
+#include "Arrow.h"
 
 class ImageProcessor
 {
@@ -19,5 +20,6 @@ public:
 	cv::Mat containerImage(Container& t_container, cv::Mat t_labeled_image); // Returns an image of just the container and children
 	std::vector<cv::Vec4i> getHierarchy(Container & t_container, cv::Mat t_labeled_image);
 	cv::Mat componentImage(Component& t_component, cv::Mat t_labeled_image);
+	cv::Mat arrowImage(Arrow& t_arrow, cv::Mat t_labeled_image);
 	std::vector<cv::Point2f> getFeatures(cv::Mat t_arrow);
 };
