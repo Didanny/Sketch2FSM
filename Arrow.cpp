@@ -1,12 +1,7 @@
 #include "Arrow.h"
 
-Arrow::Arrow(cv::Point2f t_start, cv::Point2f t_end) 
-	: m_start(t_start), m_end(t_end)
-{
-}
-
-Arrow::Arrow(std::vector<cv::Point2f> t_corners)
-	: m_corners(t_corners)
+Arrow::Arrow(std::vector<cv::Point2f> t_corners, Component& t_arrow)
+	: m_corners(t_corners), m_arrow(t_arrow)
 {
 	for (int i = 0; i < m_corners.size(); i++)
 	{
@@ -117,4 +112,14 @@ void Arrow::initArrow()
 		m_start = s2;
 	}
 	return;
+}
+
+void Arrow::addLabel(Component & t_label)
+{
+	m_labels.push_back(t_label);
+}
+
+double distance(cv::Point2f & t_first, cv::Point2f & t_second)
+{
+	return sqrt(pow((t_first.x - t_second.x), 2) + pow((t_first.y - t_second.y), 2));;
 }
