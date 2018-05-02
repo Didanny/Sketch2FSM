@@ -9,9 +9,14 @@ Circles::~Circles()
 {
 }
 
-ComponentsWithStats Circles::getChars()
+Containers Circles::getCircles()
 {
-	ComponentsWithStats chars;
+	return m_circles;
+}
+
+CharacterClassifier Circles::getChars()
+{
+	CharacterClassifier chars;
 	for (int i = 0; i < m_circles.size(); i++)
 	{
 		Components children = m_circles.at(i).getChildren();
@@ -19,7 +24,7 @@ ComponentsWithStats Circles::getChars()
 		{
 			if (isCircle(children.at(j))) continue;
 			children.at(j).setClassified();
-			chars.push_back(children.at(j));
+			chars.m_chars.push_back(children.at(j));
 		}
 	}
 	return chars;

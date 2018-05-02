@@ -16,13 +16,16 @@ typedef enum
 	PIX // for the pixel stats
 } Stat;
 
-class ComponentsWithStats : public Components
+class CharacterClassifier
 {
 private:
 	ComponentType m_type; // The type of the components int the 
 public:
-	ComponentsWithStats(); // Constructor
-	~ComponentsWithStats(); // Destructor
+	Components m_chars;
+	Components m_chars_unclassified;
+
+	CharacterClassifier(); // Constructor
+	~CharacterClassifier(); // Destructor
 	int indexOf(Component t_component); // Returns index of component if found, -1 if not
 	double getMeanArea(); // Returns the mean of the areas of the components
 	double getMeanBoxArea(); // Returns the mean of the areas of the bounding boxes of the components

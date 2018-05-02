@@ -1,17 +1,17 @@
 #include "ComponentsWithStats.h"
 
-ComponentsWithStats::ComponentsWithStats()
+CharacterClassifier::CharacterClassifier()
 {}
 
-ComponentsWithStats::~ComponentsWithStats()
+CharacterClassifier::~CharacterClassifier()
 {}
 
-int ComponentsWithStats::indexOf(Component t_component)
+int CharacterClassifier::indexOf(Component t_component)
 {
 	int label = t_component.getLabel();
-	for (int i = 0; i < size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		if (label == at(i).getLabel())
+		if (label == m_chars.at(i).getLabel())
 		{
 			return i;
 		}
@@ -19,49 +19,49 @@ int ComponentsWithStats::indexOf(Component t_component)
 	return -1;
 }
 
-double ComponentsWithStats::getMeanArea()
+double CharacterClassifier::getMeanArea()
 {
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += this->at(i).getArea();
+		sum += m_chars.at(i).getArea();
 	}
-	return (sum / this->size());
+	return (sum / m_chars.size());
 }
 
-double ComponentsWithStats::getMeanBoxArea()
+double CharacterClassifier::getMeanBoxArea()
 {
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += this->at(i).getBoundingBox().area();
+		sum += m_chars.at(i).getBoundingBox().area();
 	}
-	return (sum / this->size());
+	return (sum / m_chars.size());
 }
 
-double ComponentsWithStats::getVarianceArea()
+double CharacterClassifier::getVarianceArea()
 {
 	double mean = getMeanArea();
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((this->at(i).getArea() - mean), 2.0);
+		sum += pow((m_chars.at(i).getArea() - mean), 2.0);
 	}
-	return sum / this->size() - 1;
+	return sum / m_chars.size() - 1;
 }
 
-double ComponentsWithStats::getVarianceBoxArea()
+double CharacterClassifier::getVarianceBoxArea()
 {
 	double mean = getMeanBoxArea();
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((this->at(i).getBoundingBox().area() - mean), 2.0);
+		sum += pow((m_chars.at(i).getBoundingBox().area() - mean), 2.0);
 	}
-	return sum / this->size() - 1;
+	return sum / m_chars.size() - 1;
 }
 
-double ComponentsWithStats::getStdev(Stat t_stat)
+double CharacterClassifier::getStdev(Stat t_stat)
 {
 	if (t_stat == PIX)
 	{
@@ -74,59 +74,59 @@ double ComponentsWithStats::getStdev(Stat t_stat)
 	return -1;
 }
 
-double ComponentsWithStats::getMeanHeight()
+double CharacterClassifier::getMeanHeight()
 {
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += this->at(i).getBoundingBox().height;
+		sum += m_chars.at(i).getBoundingBox().height;
 	}
-	return (sum / this->size());
+	return (sum / m_chars.size());
 }
 
-double ComponentsWithStats::getMeanWidth()
+double CharacterClassifier::getMeanWidth()
 {
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += this->at(i).getBoundingBox().width;
+		sum += m_chars.at(i).getBoundingBox().width;
 	}
-	return (sum / this->size());
+	return (sum / m_chars.size());
 }
 
-double ComponentsWithStats::getVarianceHeight()
+double CharacterClassifier::getVarianceHeight()
 {
 	double mean = getMeanHeight();
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((this->at(i).getBoundingBox().height - mean), 2.0);
+		sum += pow((m_chars.at(i).getBoundingBox().height - mean), 2.0);
 	}
-	return sum / this->size() - 1;
+	return sum / m_chars.size() - 1;
 }
 
-double ComponentsWithStats::getVarianceWidth()
+double CharacterClassifier::getVarianceWidth()
 {
 	double mean = getMeanWidth();
 	double sum = 0;
-	for (int i = 0; i < this->size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((this->at(i).getBoundingBox().width - mean), 2.0);
+		sum += pow((m_chars.at(i).getBoundingBox().width - mean), 2.0);
 	}
-	return sum / this->size() - 1;
+	return sum / m_chars.size() - 1;
 }
 
-double ComponentsWithStats::getStdevHeight()
+double CharacterClassifier::getStdevHeight()
 {
 	return sqrt(getVarianceHeight());
 }
 
-double ComponentsWithStats::getStdevWidth()
+double CharacterClassifier::getStdevWidth()
 {
 	return sqrt(getVarianceWidth());
 }
 
-void ComponentsWithStats::findChars(Components& t_components)
+void CharacterClassifier::findChars(Components& t_components)
 {
 	int tolerance = 6;
 	double min_width = getMeanWidth() - tolerance * getStdevWidth();
@@ -142,17 +142,18 @@ void ComponentsWithStats::findChars(Components& t_components)
 			height >= min_height && height <= max_height)
 		{
 			t_components.at(i).setClassified();
-			push_back(t_components.at(i));
+			m_chars.push_back(t_components.at(i));
+			m_chars_unclassified.push_back(t_components.at(i));
 		}
 	}
 }
 
-std::vector<int> ComponentsWithStats::getLabels()
+std::vector<int> CharacterClassifier::getLabels()
 {
 	std::vector<int> labels;
-	for (int i = 0; i < size(); i++)
+	for (int i = 0; i < m_chars.size(); i++)
 	{
-		labels.push_back(at(i).getLabel());
+		labels.push_back(m_chars.at(i).getLabel());
 	}
 	return labels;
 }
