@@ -17,4 +17,7 @@ public:
 	std::vector<int> getLabels();
 	cv::Point2f getNearestPoint(cv::Point2f t_point, std::vector<cv::Point2f> t_corners);
 	void initArrows(ImageProcessor& t_image_processor, ComponentDetector& t_component_detector); // Finds start and end of each arrow
+	void initArrowLabels(Components& t_chars);
+	std::vector<int> getArrowLabels();
+	std::vector<int> getLabelLabels();
 };
