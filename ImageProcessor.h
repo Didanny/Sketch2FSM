@@ -18,8 +18,10 @@ public:
 	cv::Mat forCircleDetector(); // Returns a processed image for the CircleDetectr object
 	cv::Mat forComponentDetector(); // Returns a processed image for the ComponentDetector object
 	cv::Mat containerImage(Container& t_container, cv::Mat t_labeled_image); // Returns an image of just the container and children
+	cv::Mat childrenImage(Container& t_container, cv::Mat t_labeled_image); // Returns an image of just the children of the container
 	std::vector<cv::Vec4i> getHierarchy(Container & t_container, cv::Mat t_labeled_image);
 	cv::Mat componentImage(Component& t_component, cv::Mat t_labeled_image);
 	cv::Mat arrowImage(Arrow& t_arrow, Component & t_component, cv::Mat t_labeled_image);
+	cv::Mat arrowLabelImage(Arrow& t_arrow, cv::Mat t_labeled_image);
 	std::vector<cv::Point2f> getFeatures(cv::Mat t_arrow);
 };

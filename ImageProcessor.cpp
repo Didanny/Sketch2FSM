@@ -53,6 +53,31 @@ cv::Mat ImageProcessor::containerImage(Container & t_container, cv::Mat t_labele
 	return container_image;
 }
 
+cv::Mat ImageProcessor::childrenImage(Container & t_container, cv::Mat t_labeled_image)
+{
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_container.m_container->getBoundingBox());
+
+	cv::Mat container_image = cv::Mat(labeled_image.size(), CV_8UC3);
+	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
+	for (int r = 0; r < container_image.rows; ++r)
+	{
+		for (int c = 0; c < container_image.cols; ++c)
+		{
+			int label = labeled_image.at<int>(r, c);
+			cv::Vec3b &pixel = container_image.at<cv::Vec3b>(r, c);
+			if (label == t_container.getChildLabels())
+			{
+				pixel = colors[1];
+			}
+			else
+			{
+				pixel = colors[0];
+			}
+		}
+	}
+	return container_image;
+}
+
 std::vector<cv::Vec4i> ImageProcessor::getHierarchy(Container& t_container, cv::Mat t_labeled_image)
 {
 	cv::Mat image, image_gray, canny_output;
@@ -99,6 +124,13 @@ cv::Mat ImageProcessor::arrowImage(Arrow & t_arrow, Component & t_component, cv:
 
 	cv::circle(component_image, t_arrow.m_start, 4, cv::Scalar(0, 255, 0), -1, 8, 0);
 	cv::circle(component_image, t_arrow.m_end, 4, cv::Scalar(0, 0, 255), -1, 8, 0);
+
+	return component_image;
+}
+
+cv::Mat ImageProcessor::arrowLabelImage(Arrow & t_arrow, cv::Mat t_labeled_image)
+{
+	return cv::Mat();
 }
 
 std::vector<cv::Point2f> ImageProcessor::getFeatures(cv::Mat t_arrow)
