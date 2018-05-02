@@ -5,6 +5,7 @@
 #include "Circle.h"
 #include "ComponentsWithStats.h"
 #include "ArrowClassifier.h"
+#include "State.h"
 
 class SketchAnalyzer
 {
@@ -17,8 +18,10 @@ public:
 	Circles* m_circles;
 	ArrowClassifier* m_arrow_classifier;
 
-	ComponentsWithStats m_chars;
+	CharacterClassifier m_chars;
 	Components m_components; // Vector of the connected components
+
+	std::vector<State> m_states;
 
 	SketchAnalyzer(); // Constructor
 	~SketchAnalyzer(); // Destructor
@@ -29,4 +32,6 @@ public:
 	void findCircles(); // Finds the circles among the containers
 	void findCharacters(); // Finds the characters in and out of the circles
 	void findArrows(); // Finds the arrows
+	void parseLabels(); // Converts the labels to text
+	void createStates(); // Converts the circles to states
 };

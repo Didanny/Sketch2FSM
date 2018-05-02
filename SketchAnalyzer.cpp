@@ -59,4 +59,31 @@ void SketchAnalyzer::findArrows()
 
 	m_arrow_classifier = new ArrowClassifier(m_component_detector->getComponents(), labels_all);
 	m_arrow_classifier->initArrows(*m_image_processor, *m_component_detector);
+	m_arrow_classifier->initArrowLabels(m_chars.m_chars_unclassified);
+}
+
+void SketchAnalyzer::parseLabels()
+{
+	for (int i = 0; i < m_circles->getCircles().size(); i++)
+	{
+		cv::Mat container_image = m_image_processor->childrenImage(m_circles->getCircles().at(i), m_component_detector->getLabeledImage());
+		int label = m_circles->getCircles().at(i).m_container->getLabel();
+		cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", container_image);
+
+		std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
+		system(command.c_str());
+	}
+	for (int i = 0; i < m_arrow_classifier->m_arrows_i.size(); i++)
+	{
+		for (int j = 0; j < m_arrow_classifier->m_arrows_i.at(i).m_labels.size(); j++)
+		{
+			Component character = m_arrow_classifier->m_arrows_i.at(i).m_labels.at(j);
+			cv::Mat char_image = m_image_processor->componentImage(m_arrow_classifier->m_arrows_i.at(i).m_labels.at(j), m_component_detector->getLabeledImage());
+			int label = character.getLabel();
+			cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", char_image);
+
+			std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
+			system(command.c_str());
+		}
+	}
 }
