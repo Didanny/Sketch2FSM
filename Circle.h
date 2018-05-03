@@ -7,8 +7,10 @@ class Circles
 {
 private:
 	Containers m_circles;
-	int m_accept_index;
+	
 public:
+	int m_accept_index;
+
 	Circles(Containers t_circles); // Constructor
 	~Circles(); // Destructor
 	Containers getCircles(); // Returns vector of circles
