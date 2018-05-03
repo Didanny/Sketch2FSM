@@ -1,4 +1,5 @@
 #include "ArrowClassifier.h"
+#include <iostream>
 
 ArrowClassifier::ArrowClassifier(Components & t_components, std::vector<int> t_labels)
 {
@@ -75,22 +76,42 @@ void ArrowClassifier::initArrowLabels(Components & t_chars)
 	//	}
 	//}
 
-	for (int i = 0; i < m_arrows.size(); i++)
+	for (int i = 0; i < t_chars.size(); i++)
 	{
 		double min = 999999999;
-		cv::Point2f arrow_center = m_arrows.at(i).getCentroid();
-		for (int j = 0; j < t_chars.size(); j++)
+		cv::Point2f char_center = t_chars.at(i).getCentroid();
+		Arrow* arrow_to_add = NULL;
+		for (int j = 0; j < m_arrows.size(); j++)
 		{
-			cv::Point2f char_center = t_chars.at(j).getCentroid();
+			cv::Point2f arrow_center = m_arrows.at(j).getCentroid();
 			double dist = distance(arrow_center, char_center);
+			//std::cout << "Arrow" << m_arrows.at(j).getLabel() << " dist=" << dist << "\n";
 			if (dist < min)
 			{
 				min = dist;
-				min_component = &t_chars.at(j);
+				arrow_to_add = &m_arrows_i.at(j);
 			}
 		}
-		if (min_component != NULL) m_arrows_i.at(i).addLabel(*min_component);
+		if (arrow_to_add) arrow_to_add->addLabel(t_chars.at(i));
+		//std::cout << "Added char" << t_chars.at(i).getLabel() << " to arrow" << (*arrow_to_add).m_arrow.getLabel() << std::endl;
 	}
+
+	//for (int i = 0; i < m_arrows.size(); i++)
+	//{
+	//	double min = 999999999;
+	//	cv::Point2f arrow_center = m_arrows.at(i).getCentroid();
+	//	for (int j = 0; j < t_chars.size(); j++)
+	//	{
+	//		cv::Point2f char_center = t_chars.at(j).getCentroid();
+	//		double dist = distance(arrow_center, char_center);
+	//		if (dist < min)
+	//		{
+	//			min = dist;
+	//			min_component = &t_chars.at(j);
+	//		}
+	//	}
+	//	if (min_component != NULL) m_arrows_i.at(i).addLabel(*min_component);
+	//}
 }
 
 std::vector<int> ArrowClassifier::getLabelLabels()
