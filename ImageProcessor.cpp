@@ -130,7 +130,46 @@ cv::Mat ImageProcessor::arrowImage(Arrow & t_arrow, Component & t_component, cv:
 
 cv::Mat ImageProcessor::arrowLabelImage(Arrow & t_arrow, cv::Mat t_labeled_image)
 {
-	return cv::Mat();
+	std::vector<int> labels = t_arrow.getLabelLabels();
+	int max_x = 0;
+	int max_y = 0;
+	int min_x = 99999999;
+	int min_y = 99999999;
+
+	for (int i = 0; i < t_arrow.m_labels.size(); i++)
+	{
+		int my_min_x = t_arrow.m_labels.at(i).getBoundingBox().x;
+		int my_min_y = t_arrow.m_labels.at(i).getBoundingBox().y;
+		int my_max_x = t_arrow.m_labels.at(i).getBoundingBox().x + t_arrow.m_labels.at(i).getBoundingBox().width;
+		int my_max_y = t_arrow.m_labels.at(i).getBoundingBox().y + t_arrow.m_labels.at(i).getBoundingBox().height;
+		if (max_x < my_max_x) max_x = my_max_x;
+		if (max_y < my_max_y) max_y = my_max_y;
+		if (min_x > my_min_x) min_x = my_min_x;
+		if (min_y > my_min_y) min_y = my_min_y;
+	}
+
+	cv::Rect rect(min_x, min_y, max_x - min_x, max_y - min_y);
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, rect);
+
+	cv::Mat component_image = cv::Mat(labeled_image.size(), CV_8UC3);
+	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
+	for (int r = 0; r < component_image.rows; ++r)
+	{
+		for (int c = 0; c < component_image.cols; ++c)
+		{
+			int label = labeled_image.at<int>(r, c);
+			cv::Vec3b &pixel = component_image.at<cv::Vec3b>(r, c);
+			if (label == labels)
+			{
+				pixel = colors[1];
+			}
+			else
+			{
+				pixel = colors[0];
+			}
+		}
+	}
+	return component_image;
 }
 
 std::vector<cv::Point2f> ImageProcessor::getFeatures(cv::Mat t_arrow)
