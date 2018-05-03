@@ -22,6 +22,10 @@ std::string SketchAnalyzer::readLabel(std::string t_file)
 		std::getline(lbl_file, line);
 		//std::cout << line;
 	}
+	else
+	{
+		return "unknown";
+	}
 	return line;
 }
 
@@ -90,8 +94,8 @@ void SketchAnalyzer::parseLabels()
 		for (int j = 0; j < m_arrow_classifier->m_arrows_i.at(i).m_labels.size(); j++)
 		{
 			Component character = m_arrow_classifier->m_arrows_i.at(i).m_labels.at(j);
-			cv::Mat char_image = m_image_processor->componentImage(m_arrow_classifier->m_arrows_i.at(i).m_labels.at(j), m_component_detector->getLabeledImage());
-			int label = character.getLabel();
+			cv::Mat char_image = m_image_processor->arrowLabelImage(m_arrow_classifier->m_arrows_i.at(i), m_component_detector->getLabeledImage());
+			int label = m_arrow_classifier->m_arrows_i.at(i).m_arrow.getLabel();
 			cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", char_image);
 
 			std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
@@ -118,4 +122,17 @@ void SketchAnalyzer::createStates()
 void SketchAnalyzer::createTransitions()
 {
 	m_arrow_classifier->initPaths(m_states);
+	for (int i = 0; i < m_arrow_classifier->m_arrows_i.size(); i++)
+	{
+		std::string path = "./temp/lbl";
+
+		State* source = m_arrow_classifier->m_arrows_i.at(i).m_source;
+		State* destination = m_arrow_classifier->m_arrows_i.at(i).m_destination;
+
+		int lbl = m_arrow_classifier->m_arrows_i.at(i).m_arrow.getLabel();
+
+		std::string label = readLabel(path + std::to_string(lbl) + ".txt");
+
+		Transition transition(*source, *destination, m_arrow_classifier->m_arrows_i.at(i).m_arrow, label);
+	}
 }
