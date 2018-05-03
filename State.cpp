@@ -13,3 +13,8 @@ void State::setAccept()
 {
 	m_is_accept = true;
 }
+
+double State::getRadius()
+{
+	return (m_circle.getBoundingBox().width + m_circle.getBoundingBox().y) / 4.0;
+}

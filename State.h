@@ -18,4 +18,5 @@ public:
 	~State(); // Destructor
 
 	void setAccept(); // Sets state as accept state
+	double getRadius(); // Returns radius of circle
 };
