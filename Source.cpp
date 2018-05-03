@@ -227,8 +227,12 @@ int main(int argc, const char** argv)
 	sa.findConnectedComponents();
 	//cv::imshow("SA Labels", sa.m_component_detector->getLabeledImage());
 	sa.findContainers();
+	sa.findCircles();
 	sa.findCharacters();
 	sa.findArrows();
+	sa.parseLabels();
+	sa.createStates();
+	sa.createTransitions();
 
 	std::cout << "CONTAINERS\n";
 	for (int i = 0; i < sa.m_circle_classifier->getContainers().size(); i++)
@@ -250,7 +254,21 @@ int main(int argc, const char** argv)
 	//{
 	//	std::cout << sa.m_circles->getLabels().at(i) << std::endl;
 	//}
-
+	std::cout << "ARROW CHARS\n";
+	for (int i = 0; i < sa.m_arrow_classifier->getLabelLabels().size(); i++)
+	{
+		std::cout << "Arrow " << i << std::endl;
+	}
+	std::cout << "STATES\n";
+	for (int i = 0; i < sa.m_states.size(); i++)
+	{
+		std::cout << sa.m_states.at(i).m_name << std::endl;
+	}
+	std::cout << "TRANSITIONS\n";
+	for (int i = 0; i < sa.m_transitions.size(); i++)
+	{
+		std::cout << sa.m_transitions.at(i).m_label << std::endl;
+	}
 
 #pragma endregion
 
@@ -356,7 +374,7 @@ int main(int argc, const char** argv)
 
 	Circles circles(circle_classifier.findCircles(image_processor, component_detector));
 
-	ComponentsWithStats chars = circles.getChars();
+	CharacterClassifier chars = circles.getChars();
 	chars.findChars(components);
 
 	std::vector<int> labels_all = circles.getLabels();
@@ -383,11 +401,11 @@ int main(int argc, const char** argv)
 
 	cv::Mat z = component_detector.getLabeledImage();
 
-	cv::Mat x = z != 0;
-	for (int i = 0; i < labels.size(); i++)
-	{
-		x = x & (z != labels.at(i));
-	}
+	cv::Mat x = z != 1 & z != 4 & z != 31;
+	//for (int i = 0; i < labels.size(); i++)
+	//{
+	//	x = x & (z != labels.at(i));
+	//}
 	cv::imshow("X", x);
 
 
@@ -442,10 +460,10 @@ int main(int argc, const char** argv)
 	}
 
 	// Finding the nearest point
-	Arrow arrow0(corners);
-	//arrow0.initArrow();
+	/*Arrow arrow0(corners);
+	arrow0.initArrow();*/
 
-#if 1
+#if 0
 	cv::circle(arrow_0copy, arrow0.m_start, r, cv::Scalar(0, 255, 0), -1, 8, 0);
 	cv::circle(arrow_0copy, arrow0.m_end, r, cv::Scalar(0, 0, 255), -1, 8, 0);
 	cv::circle(arrow_0copy, arrow0.start2, r, cv::Scalar(255, 0, 0), -1, 8, 0);
