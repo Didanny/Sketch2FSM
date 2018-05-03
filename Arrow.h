@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ComponentDetector.h"
+#include "State.h"
 #include <stack>
 
 class Arrow
@@ -18,11 +19,15 @@ public:
 	std::vector<cv::Point2f> m_corners;
 	std::vector<bool> m_visited;
 
+	State* m_source;
+	State* m_destination;
+
 	Arrow(std::vector<cv::Point2f> t_corners, Component& t_arrow); // Constructor
 	~Arrow(); // Destructor
 	int getNearestPoint(cv::Point2f t_point);
 	void initArrow(); // initializes start and end points
 	void addLabel(Component& t_label); // Adds label to m_labels
+	void initPath(std::vector<State>& t_states); // Initializes the source and destination 
 };
 
 double distance(cv::Point2f& t_first, cv::Point2f& t_second);

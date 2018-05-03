@@ -20,4 +20,5 @@ public:
 	void initArrowLabels(Components& t_chars);
 	std::vector<int> getArrowLabels();
 	std::vector<int> getLabelLabels();
+	void initPaths(std::vector<State>& t_states); // Initializes paths of arrows
 };

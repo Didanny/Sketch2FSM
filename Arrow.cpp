@@ -119,6 +119,28 @@ void Arrow::addLabel(Component & t_label)
 	m_labels.push_back(t_label);
 }
 
+void Arrow::initPath(std::vector<State>& t_states)
+{
+	double min_start_dist = 9999999;
+	double min_end_dist = 9999999;
+	for (int i = 0; i < t_states.size(); i++)
+	{
+		cv::Point2f state_center = t_states.at(i).m_circle.getCentroid();
+		double dist_start = distance(state_center, m_start);
+		double dist_end = distance(state_center, m_end);
+		if (dist_start < min_start_dist)
+		{
+			min_start_dist = dist_start;
+			m_source = &t_states.at(i);
+		}
+		if (dist_end < min_end_dist)
+		{
+			min_end_dist = dist_end;
+			m_destination = &t_states.at(i);
+		}
+	}
+}
+
 double distance(cv::Point2f & t_first, cv::Point2f & t_second)
 {
 	return sqrt(pow((t_first.x - t_second.x), 2) + pow((t_first.y - t_second.y), 2));;

@@ -106,3 +106,11 @@ std::vector<int> ArrowClassifier::getLabelLabels()
 	}
 	return labels;
 }
+
+void ArrowClassifier::initPaths(std::vector<State>& t_states)
+{
+	for (int i = 0; i < m_arrows_i.size(); i++)
+	{
+		m_arrows_i.at(i).initPath(t_states);
+	}
+}
