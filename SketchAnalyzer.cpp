@@ -13,6 +13,18 @@ SketchAnalyzer::~SketchAnalyzer()
 	delete m_arrow_classifier;
 }
 
+std::string SketchAnalyzer::readLabel(std::string t_file)
+{
+	std::string line;
+	std::ifstream lbl_file(t_file);
+	if (lbl_file.is_open())
+	{
+		std::getline(lbl_file, line);
+		//std::cout << line;
+	}
+	return line;
+}
+
 // Loads image from given file path
 void SketchAnalyzer::loadImage(std::string t_image_path)
 {
@@ -86,4 +98,24 @@ void SketchAnalyzer::parseLabels()
 			system(command.c_str());
 		}
 	}
+}
+
+void SketchAnalyzer::createStates()
+{
+	int accept = m_circles->m_accept_index;
+	std::string path = "./temp/lbl";
+	for (int i = 0; i < m_circles->getCircles().size(); i++)
+	{
+		Component circle = *(m_circles->getCircles().at(i).m_container);
+		int lbl = circle.getLabel();
+		std::string label = readLabel(path + std::to_string(lbl) + ".txt");
+		State state(circle, label);
+		if (i == accept) state.setAccept();
+		m_states.push_back(state);
+	}
+}
+
+void SketchAnalyzer::createTransitions()
+{
+	m_arrow_classifier->initPaths(m_states);
 }

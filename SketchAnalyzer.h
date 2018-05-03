@@ -1,11 +1,15 @@
 #pragma once
 
+#include <fstream>
+#include <iostream>
+
 #include "ImageProcessor.h"
 #include "CircleClassifier.h"
 #include "Circle.h"
 #include "ComponentsWithStats.h"
 #include "ArrowClassifier.h"
 #include "State.h"
+#include "Transition.h"
 
 class SketchAnalyzer
 {
@@ -22,9 +26,12 @@ public:
 	Components m_components; // Vector of the connected components
 
 	std::vector<State> m_states;
+	std::vector<Transition> m_transitions;
 
 	SketchAnalyzer(); // Constructor
 	~SketchAnalyzer(); // Destructor
+
+	std::string readLabel(std::string t_file);
 
 	void loadImage(std::string t_image_path); // Loads image from given path
 	void findConnectedComponents(); // Detects connected components
@@ -34,4 +41,5 @@ public:
 	void findArrows(); // Finds the arrows
 	void parseLabels(); // Converts the labels to text
 	void createStates(); // Converts the circles to states
+	void createTransitions(); // Converts the arrows to states
 };
