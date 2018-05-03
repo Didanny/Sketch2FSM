@@ -141,6 +141,16 @@ void Arrow::initPath(std::vector<State>& t_states)
 	}
 }
 
+std::vector<int> Arrow::getLabelLabels()
+{
+	std::vector<int> labels;
+	for (int i = 0; i < m_labels.size(); i++)
+	{
+		labels.push_back(m_labels.at(i).getLabel());
+	}
+	return labels;
+}
+
 double distance(cv::Point2f & t_first, cv::Point2f & t_second)
 {
 	return sqrt(pow((t_first.x - t_second.x), 2) + pow((t_first.y - t_second.y), 2));;

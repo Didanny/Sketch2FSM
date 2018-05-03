@@ -28,6 +28,7 @@ public:
 	void initArrow(); // initializes start and end points
 	void addLabel(Component& t_label); // Adds label to m_labels
 	void initPath(std::vector<State>& t_states); // Initializes the source and destination 
+	std::vector<int> getLabelLabels();
 };
 
 double distance(cv::Point2f& t_first, cv::Point2f& t_second);
