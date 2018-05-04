@@ -1,4 +1,5 @@
 #include "Arrow.h"
+#include <iostream>
 
 Arrow::Arrow(std::vector<cv::Point2f> t_corners, Component& t_arrow)
 	: m_corners(t_corners), m_arrow(t_arrow)
@@ -111,6 +112,12 @@ void Arrow::initArrow()
 	{
 		m_start = s2;
 	}
+	float shift_x = m_arrow.getBoundingBox().x;
+	float shift_y = m_arrow.getBoundingBox().y;
+	m_start.x += shift_x;
+	m_start.y += shift_y;
+	m_end.x += shift_x;
+	m_end.y += shift_y;
 	return;
 }
 
@@ -121,22 +128,34 @@ void Arrow::addLabel(Component & t_label)
 
 void Arrow::initPath(std::vector<State>& t_states)
 {
-	double min_start_dist = 9999999;
-	double min_end_dist = 9999999;
-	for (int i = 0; i < t_states.size(); i++)
+	double min_start_dist = std::numeric_limits<double>::max();
+	double min_end_dist = std::numeric_limits<double>::max();
+	for (int j = 0; j < t_states.size(); j++)
 	{
-		cv::Point2f state_center = t_states.at(i).m_circle.getCentroid();
-		double dist_start = distance(state_center, m_start);
-		double dist_end = distance(state_center, m_end);
+		cv::Point2f state_center = t_states.at(j).m_circle.getCentroid();
+
+		std::cout << state_center << "\n";
+		std::cout << "Start=" << m_start << " End=" << m_end << "\n";
+
+		double dist_start = distance(state_center, m_start) - t_states.at(j).getRadius();
+		double dist_end = distance(state_center, m_end) - t_states.at(j).getRadius();
+		
+		//std::cout << "dist_start=" << dist_start << std::endl;
+		//std::cout << "dist_end=" << dist_end << std::endl;
+
+		std::cout << "Arrow" << m_arrow.getLabel() << "\n";
+		std::cout << "Distance from " + t_states.at(j).m_name << " " << dist_end << "\n";
+		std::cout << "Distance from " + t_states.at(j).m_name << " " << dist_start << "\n\n";
+
 		if (dist_start < min_start_dist)
 		{
 			min_start_dist = dist_start;
-			m_source = &t_states.at(i);
+			m_source = &t_states.at(j);
 		}
 		if (dist_end < min_end_dist)
 		{
 			min_end_dist = dist_end;
-			m_destination = &t_states.at(i);
+			m_destination = &t_states.at(j);
 		}
 	}
 }
@@ -154,4 +173,9 @@ std::vector<int> Arrow::getLabelLabels()
 double distance(cv::Point2f & t_first, cv::Point2f & t_second)
 {
 	return sqrt(pow((t_first.x - t_second.x), 2) + pow((t_first.y - t_second.y), 2));;
+}
+
+double distance_overflow(cv::Point2f & t_first, cv::Point2f & t_second)
+{
+	return sqrt(pow((t_first.x - t_second.x)/1000000000000.0, 2) + pow((t_first.y - t_second.y)/1000000000000.0, 2));;
 }

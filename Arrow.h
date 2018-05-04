@@ -32,3 +32,4 @@ public:
 };
 
 double distance(cv::Point2f& t_first, cv::Point2f& t_second);
+double distance_overflow(cv::Point2f & t_first, cv::Point2f & t_second);
