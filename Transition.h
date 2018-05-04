@@ -1,6 +1,7 @@
 #pragma once
 
 #include "State.h"
+#include "Arrow.h"
 
 class Transition
 {
@@ -11,9 +12,11 @@ public:
 	State m_next_state;
 	std::string m_label;
 
-	Component m_arrow;
+	Arrow m_arrow;
 
 
-	Transition(State& t_first_state, State& t_next_state, Component& t_arrow, std::string t_label); // Constructor
+	Transition(State& t_first_state, State& t_next_state, Arrow& t_arrow, std::string t_label); // Constructor
 	~Transition(); // Destructor
+
+	std::string toString(); // Converts Transition to a string
 };
