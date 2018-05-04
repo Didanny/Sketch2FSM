@@ -30,8 +30,9 @@ std::string SketchAnalyzer::readLabel(std::string t_file)
 }
 
 // Loads image from given file path
-void SketchAnalyzer::loadImage(std::string t_image_path)
+void SketchAnalyzer::loadImage(const char* t_image_path, int t_length)
 {
+	std::string image_path(t_image_path, t_length);
 	m_image_processor = new ImageProcessor(t_image_path);
 }
 
@@ -63,7 +64,7 @@ void SketchAnalyzer::findCharacters()
 	m_chars = m_circles->getChars();
 	m_chars.findChars(m_component_detector->getComponents());
 
-	m_circles->initAcceptIndex();
+	//m_circles->initAcceptIndex();
 }
 
 // Finds the arrows
@@ -76,6 +77,8 @@ void SketchAnalyzer::findArrows()
 	m_arrow_classifier = new ArrowClassifier(m_component_detector->getComponents(), labels_all);
 	m_arrow_classifier->initArrows(*m_image_processor, *m_component_detector);
 	m_arrow_classifier->initArrowLabels(m_chars.m_chars_unclassified);
+
+	m_circles->initAcceptIndex();
 }
 
 void SketchAnalyzer::parseLabels()
@@ -113,7 +116,7 @@ void SketchAnalyzer::createStates()
 		Component circle = *(m_circles->getCircles().at(i).m_container);
 		int lbl = circle.getLabel();
 		std::string label = readLabel(path + std::to_string(lbl) + ".txt");
-		State state(circle, label);
+		State state(*(m_circles->getCircles().at(i).m_container), label);
 		if (i == accept) state.setAccept();
 		m_states.push_back(state);
 	}
@@ -122,7 +125,7 @@ void SketchAnalyzer::createStates()
 void SketchAnalyzer::createTransitions()
 {
 	m_arrow_classifier->initPaths(m_states);
-	for (int i = 0; i < m_arrow_classifier->m_arrows_i.size(); i++)
+	for (int i = 0; i < m_arrow_classifier->m_arrows.size(); i++)
 	{
 		std::string path = "./temp/lbl";
 
@@ -133,6 +136,22 @@ void SketchAnalyzer::createTransitions()
 
 		std::string label = readLabel(path + std::to_string(lbl) + ".txt");
 
-		Transition transition(*source, *destination, m_arrow_classifier->m_arrows_i.at(i).m_arrow, label);
+		Transition transition(*source, *destination, m_arrow_classifier->m_arrows_i.at(i), label);
+		m_transitions.push_back(transition);
 	}
+}
+
+void SketchAnalyzer::outputFile()
+{
+	std::ofstream output;
+	output.open("./output.txt");
+	for (int i = 0; i < m_states.size(); i++)
+	{
+		output << m_states.at(i).toString();// << "\n";
+	}
+	for (int i = 0; i < m_transitions.size(); i++)
+	{
+		output << m_transitions.at(i).toString();// << "\n";
+	}
+	output.close();
 }

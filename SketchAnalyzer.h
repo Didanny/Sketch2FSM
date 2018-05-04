@@ -33,7 +33,7 @@ public:
 
 	std::string readLabel(std::string t_file);
 
-	void loadImage(std::string t_image_path); // Loads image from given path
+	void loadImage(const char* t_image_path, int t_length); // Loads image from given path
 	void findConnectedComponents(); // Detects connected components
 	void findContainers(); // Finds the containers, circle candidates
 	void findCircles(); // Finds the circles among the containers
@@ -42,4 +42,5 @@ public:
 	void parseLabels(); // Converts the labels to text
 	void createStates(); // Converts the circles to states
 	void createTransitions(); // Converts the arrows to states
+	void outputFile(); // Outputs the States and Transitions to a text file
 };
