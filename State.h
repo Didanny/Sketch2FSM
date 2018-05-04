@@ -11,7 +11,7 @@ private:
 
 public:
 	std::string m_name;
-	Component& m_circle;
+	Component m_circle;
 	bool m_is_accept;
 
 	State(Component t_component, std::string t_name); // Constructor
@@ -19,4 +19,6 @@ public:
 
 	void setAccept(); // Sets state as accept state
 	double getRadius(); // Returns radius of circle
+
+	std::string toString(); // Converts State to string
 };
