@@ -1,4 +1,4 @@
-#include "ComponentsWithStats.h"
+#include "CharacterClassifier.h"
 
 CharacterClassifier::CharacterClassifier()
 {}

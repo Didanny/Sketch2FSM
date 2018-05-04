@@ -6,7 +6,7 @@
 #include "ImageProcessor.h"
 #include "CircleClassifier.h"
 #include "Circle.h"
-#include "ComponentsWithStats.h"
+#include "CharacterClassifier.h"
 #include "ArrowClassifier.h"
 #include "State.h"
 #include "Transition.h"

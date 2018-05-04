@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ComponentsWithStats.h"
+#include "CharacterClassifier.h"
 #include "ImageProcessor.h"
 #include "Arrow.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CircleClassifier.h"
-#include "ComponentsWithStats.h"
+#include "CharacterClassifier.h"
 
 class Circles
 {
