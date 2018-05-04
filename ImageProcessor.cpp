@@ -191,3 +191,27 @@ std::vector<cv::Point2f> ImageProcessor::getFeatures(cv::Mat t_arrow)
 	//arrow_0.copyTo(arrow_0copy);
 	return corners;
 }
+
+cv::Mat ImageProcessor::labelIMage(std::vector<int> t_labels, cv::Mat t_labeled_image)
+{
+	cv::Mat labeled_image = cv::Mat(t_labeled_image);
+	cv::Mat component_image = cv::Mat(labeled_image.size(), CV_8UC3);
+	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
+	for (int r = 0; r < component_image.rows; ++r)
+	{
+		for (int c = 0; c < component_image.cols; ++c)
+		{
+			int label = labeled_image.at<int>(r, c);
+			cv::Vec3b &pixel = component_image.at<cv::Vec3b>(r, c);
+			if (label == t_labels)
+			{
+				pixel = colors[1];
+			}
+			else
+			{
+				pixel = colors[0];
+			}
+		}
+	}
+	return component_image;
+}

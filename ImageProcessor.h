@@ -24,4 +24,6 @@ public:
 	cv::Mat arrowImage(Arrow& t_arrow, Component & t_component, cv::Mat t_labeled_image);
 	cv::Mat arrowLabelImage(Arrow& t_arrow, cv::Mat t_labeled_image);
 	std::vector<cv::Point2f> getFeatures(cv::Mat t_arrow);
+
+	cv::Mat labelIMage(std::vector<int> t_labels, cv::Mat t_labeled_image);
 };
