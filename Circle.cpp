@@ -62,12 +62,15 @@ void Circles::initAcceptIndex()
 			if (isCircle(m_circles.at(i).getChildren().at(j)))
 			{
 				int child_label = m_circles.at(i).getChildren().at(j).getLabel();
+				Component big_circle = *m_circles.at(i).m_container;
 				m_circles.erase(m_circles.begin() + i);
 				for (int k = 0; k < m_circles.size(); k++)
 				{
 					if (child_label == m_circles.at(k).m_container->getLabel())
 					{
 						m_accept_index = k;
+						//m_circles.at(k).m_container = new Component(big_circle);
+						// TODO: Fix The Radius issue
 						return;
 					}
 				}
