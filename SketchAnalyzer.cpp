@@ -145,6 +145,7 @@ void SketchAnalyzer::outputFile()
 {
 	std::ofstream output;
 	output.open("./output.txt");
+	output << m_image_processor->originalImage().cols << "," << m_image_processor->originalImage().rows << "\n";
 	for (int i = 0; i < m_states.size(); i++)
 	{
 		output << m_states.at(i).toString();// << "\n";
