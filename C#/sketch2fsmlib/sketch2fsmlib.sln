@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sketch2fsmlib", "sketch2fsmlib.vcxproj", "{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Debug|x64.ActiveCfg = Debug|x64
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Debug|x64.Build.0 = Debug|x64
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Debug|x86.ActiveCfg = Debug|Win32
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Debug|x86.Build.0 = Debug|Win32
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Release|x64.ActiveCfg = Release|x64
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Release|x64.Build.0 = Release|x64
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Release|x86.ActiveCfg = Release|Win32
+		{E18EBF41-21FB-4977-B7E6-0E23BE9A5728}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {83F12DFD-195A-4DB9-936A-75B4328B9FAE}
+	EndGlobalSection
+EndGlobal
