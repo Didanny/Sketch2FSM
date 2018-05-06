@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sketch2FSM_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="700" Width="800"
+        SizeChanged="Window_SizeChanged">
     <StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -33,20 +34,13 @@
                 </StackPanel>
                 <StackPanel Name="sp">
                 </StackPanel>
-                <ProgressBar Height="10" Minimum="0" Maximum="100" Value="75"/>
-                <Canvas  Name="Canvas">
-                    <Canvas.Background>
-                        <SolidColorBrush Color="#ebeef4" Opacity="0"/>
-                    </Canvas.Background>
-                </Canvas>
+                <!-- <ProgressBar Height="10" Minimum="0" Maximum="100" Value="75"/> -->
             </StackPanel>
 
             <!-- Side Panel -->
             <StackPanel Grid.Column="1" Margin="0 46 25 0">
-                <Button Margin="0 5" Click="Button_Click">Start</Button>
-                <Label Margin="0 5">Incorrect FSM?</Label>
-                <Button Margin="0 5">Insert State</Button>
-                <Button Margin="0 5">Insert Transition</Button>
+                <Button Margin="0 5" Click="Start_Click" Padding="0 30">Start</Button>
+                <Button Margin="0 5" Padding="0 30" Visibility="Collapsed">Done</Button>
             </StackPanel>
         </Grid>
         <Grid>
@@ -56,29 +50,46 @@
             </Grid.ColumnDefinitions>
             
             <!-- Canvas -->
-            <StackPanel Margin="50 0" Grid.Column="0" Background="#ebeef4">
-                <TextBlock Text="TEST" Name="TestBlock"></TextBlock>
-            </StackPanel>
+            <Grid
+                 Margin="50 0" Grid.Column="0">
+                <Canvas Grid.Row="0" Background="#ffffff" Name="DrawingSurface" Width="Auto" Height="Auto"></Canvas>
+            </Grid>
             
-            <!-- Side Panel -->
-            <StackPanel Grid.Column="1" Margin="0 20 25 0" Visibility="Hidden">
+            <!-- Edit Panel -->
+            <StackPanel Grid.Column="1" Margin="0 20 25 0" Visibility="Visible">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                        <ColumnDefinition Width="3*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="1">Current Component</Label>
-                    <Button Grid.Column="0">&lt;&lt;</Button>
-                    <Button Grid.Column="2">&gt;&gt;</Button>
+                    <Label Grid.Column="1">Editting Panel</Label>
+                    <Button Grid.Column="0" Click="Left_Click">&lt;&lt;</Button>
+                    <Button Grid.Column="2" Click="Right_Click">&gt;&gt;</Button>
                 </Grid>
                 <Label Margin="0 10 0 0">Label:</Label>
-                <TextBox></TextBox>
-                <Label Margin="0 2 0 0" Visibility="Visible">From:</Label>
-                <TextBox></TextBox>
-                <Label Margin="0 2 0 0" Visibility="Visible">To:</Label>
-                <TextBox></TextBox>
+                <TextBox Name="Label"></TextBox>
+                <StackPanel Name="ArrowPanel">
+                    <Label Margin="0 2 0 0">From:</Label>
+                    <TextBox Name="From"></TextBox>
+                    <Label Margin="0 2 0 0">To:</Label>
+                    <TextBox Name="To"></TextBox>
+                    <Button Margin="0 10 0 0" Name="Flip" Click="Flip_Click">Flip Direction</Button>
+                </StackPanel>
+                <StackPanel Name="StatePanel">
+                    <CheckBox Name="IsAccept" Margin="0 5 0 0" IsChecked="True">Is Accept</CheckBox>
+                </StackPanel>
+                <Button Margin="0 5 0 0" Click="Delete_Click">Delete</Button>
+                <Label>Add New...</Label>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <RadioButton GroupName="Insert" Name="StateRadio" Grid.Column="0">State</RadioButton>
+                    <RadioButton GroupName="Insert" Name="ArrowRadio" Grid.Column="1">Arrow</RadioButton>
+                </Grid>
             </StackPanel>
     </Grid>
     </StackPanel>
