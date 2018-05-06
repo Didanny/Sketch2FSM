@@ -29,5 +29,6 @@ std::string State::toString()
 		std::to_string(m_circle.getLabel()) + "," + 
 		std::to_string(m_circle.getCentroid().x) + "," +
 		std::to_string(m_circle.getCentroid().y) + "," +
-		std::to_string(getRadius()) + "\n";
+		std::to_string(getRadius()) + "," + 
+		std::to_string(m_is_accept) + "\n";
 }
