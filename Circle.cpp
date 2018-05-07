@@ -23,7 +23,6 @@ CharacterClassifier Circles::getChars()
 		for (int j = 0; j < children.size(); j++) 
 		{
 			if (isCircle(children.at(j))) continue;
-			children.at(j).setClassified();
 			chars.m_chars.push_back(children.at(j));
 		}
 	}
@@ -32,10 +31,10 @@ CharacterClassifier Circles::getChars()
 
 bool Circles::isCircle(Component & t_component)
 {
-	int label = t_component.getLabel();
+	int label = t_component.m_label;
 	for (int i = 0; i < m_circles.size(); i++)
 	{
-		if (label == m_circles.at(i).m_container->getLabel())
+		if (label == m_circles.at(i).m_container->m_label)
 		{
 			return true;
 		}
@@ -48,7 +47,7 @@ std::vector<int> Circles::getLabels()
 	std::vector<int> labels;
 	for (int i = 0; i < m_circles.size(); i++)
 	{
-		labels.push_back(m_circles.at(i).m_container->getLabel());
+		labels.push_back(m_circles.at(i).m_container->m_label);
 	}
 	return labels;
 }
@@ -61,12 +60,12 @@ void Circles::initAcceptIndex()
 		{
 			if (isCircle(m_circles.at(i).getChildren().at(j)))
 			{
-				int child_label = m_circles.at(i).getChildren().at(j).getLabel();
+				int child_label = m_circles.at(i).getChildren().at(j).m_label;
 				Component big_circle = *m_circles.at(i).m_container;
 				m_circles.erase(m_circles.begin() + i);
 				for (int k = 0; k < m_circles.size(); k++)
 				{
-					if (child_label == m_circles.at(k).m_container->getLabel())
+					if (child_label == m_circles.at(k).m_container->m_label)
 					{
 						m_accept_index = k;
 						//m_circles.at(k).m_container = new Component(big_circle);

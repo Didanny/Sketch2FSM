@@ -39,7 +39,7 @@ std::vector<int> Container::getChildLabels()
 	std::vector<int> child_labels;
 	for (int i = 0; i < m_children.size(); i++)
 	{
-		child_labels.push_back(m_children.at(i).getLabel());
+		child_labels.push_back(m_children.at(i).m_label);
 	}
 	return child_labels;
 }

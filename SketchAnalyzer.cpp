@@ -86,7 +86,7 @@ void SketchAnalyzer::parseLabels()
 	for (int i = 0; i < m_circles->getCircles().size(); i++)
 	{
 		cv::Mat container_image = m_image_processor->childrenImage(m_circles->getCircles().at(i), m_component_detector->getLabeledImage());
-		int label = m_circles->getCircles().at(i).m_container->getLabel();
+		int label = m_circles->getCircles().at(i).m_container->m_label;
 		cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", container_image);
 
 		std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
@@ -98,10 +98,10 @@ void SketchAnalyzer::parseLabels()
 		{
 			Component character = m_arrow_classifier->m_arrows_i.at(i).m_labels.at(j);
 			cv::Mat char_image = m_image_processor->arrowLabelImage(m_arrow_classifier->m_arrows_i.at(i), m_component_detector->getLabeledImage());
-			int label = m_arrow_classifier->m_arrows_i.at(i).m_arrow.getLabel();
+			int label = m_arrow_classifier->m_arrows_i.at(i).m_arrow.m_label;
 			cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", char_image);
 
-			std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
+			std::string command = "./Tesseract-OCR/tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
 			system(command.c_str());
 		}
 	}
@@ -114,7 +114,7 @@ void SketchAnalyzer::createStates()
 	for (int i = 0; i < m_circles->getCircles().size(); i++)
 	{
 		Component circle = *(m_circles->getCircles().at(i).m_container);
-		int lbl = circle.getLabel();
+		int lbl = circle.m_label;
 		std::string label = readLabel(path + std::to_string(lbl) + ".txt");
 		State state(*(m_circles->getCircles().at(i).m_container), label);
 		if (i == accept) state.setAccept();
@@ -132,7 +132,7 @@ void SketchAnalyzer::createTransitions()
 		State* source = m_arrow_classifier->m_arrows_i.at(i).m_source;
 		State* destination = m_arrow_classifier->m_arrows_i.at(i).m_destination;
 
-		int lbl = m_arrow_classifier->m_arrows_i.at(i).m_arrow.getLabel();
+		int lbl = m_arrow_classifier->m_arrows_i.at(i).m_arrow.m_label;
 
 		std::string label = readLabel(path + std::to_string(lbl) + ".txt");
 

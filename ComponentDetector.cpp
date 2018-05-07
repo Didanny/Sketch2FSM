@@ -51,7 +51,7 @@ void ComponentDetector::findContainers()
 				m_components.at(j).setAsContainer();
 				if (m_components.at(i).getContainer() != NULL)
 				{
-					if (m_components.at(i).getContainer()->getBoundingBox().area() > m_components.at(j).getBoundingBox().area())
+					if (m_components.at(i).getContainer()->m_bounding_box.area() > m_components.at(j).m_bounding_box.area())
 					{
 						m_components.at(i).setContainer(m_components.at(j));
 					}

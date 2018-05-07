@@ -112,8 +112,8 @@ void Arrow::initArrow()
 	{
 		m_start = s2;
 	}
-	float shift_x = m_arrow.getBoundingBox().x;
-	float shift_y = m_arrow.getBoundingBox().y;
+	float shift_x = m_arrow.m_bounding_box.x;
+	float shift_y = m_arrow.m_bounding_box.y;
 	m_start.x += shift_x;
 	m_start.y += shift_y;
 	m_end.x += shift_x;
@@ -143,7 +143,7 @@ void Arrow::initPath(std::vector<State>& t_states)
 		//std::cout << "dist_start=" << dist_start << std::endl;
 		//std::cout << "dist_end=" << dist_end << std::endl;
 
-		std::cout << "Arrow" << m_arrow.getLabel() << "\n";
+		std::cout << "Arrow" << m_arrow.m_label << "\n";
 		std::cout << "Distance from " + t_states.at(j).m_name << " " << dist_end << "\n";
 		std::cout << "Distance from " + t_states.at(j).m_name << " " << dist_start << "\n\n";
 
@@ -165,7 +165,7 @@ std::vector<int> Arrow::getLabelLabels()
 	std::vector<int> labels;
 	for (int i = 0; i < m_labels.size(); i++)
 	{
-		labels.push_back(m_labels.at(i).getLabel());
+		labels.push_back(m_labels.at(i).m_label);
 	}
 	return labels;
 }

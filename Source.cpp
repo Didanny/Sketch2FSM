@@ -30,7 +30,7 @@ int main(int argc, const char** argv)
 	std::cout << "CONTAINERS\n";
 	for (int i = 0; i < sa.m_circle_classifier->getContainers().size(); i++)
 	{
-		std::cout << sa.m_circle_classifier->getContainers().at(i).m_container->getLabel() << std::endl;
+		std::cout << sa.m_circle_classifier->getContainers().at(i).m_container->m_label << std::endl;
 	}
 	std::cout << "CIRCLES\n";
 	for (int i = 0; i < sa.m_circles->getLabels().size(); i++)
@@ -57,7 +57,7 @@ int main(int argc, const char** argv)
 	std::cout << "STATES\n";
 	for (int i = 0; i < sa.m_states.size(); i++)
 	{
-		std::cout << sa.m_states.at(i).m_name << " " << sa.m_states.at(i).m_circle.getLabel() << " " << sa.m_states.at(i).m_circle.getCentroid().y << "," << sa.m_states.at(i).m_circle.getCentroid().x << std::endl;
+		std::cout << sa.m_states.at(i).m_name << " " << sa.m_states.at(i).m_circle.m_label << " " << sa.m_states.at(i).m_circle.getCentroid().y << "," << sa.m_states.at(i).m_circle.getCentroid().x << std::endl;
 	}
 	std::cout << "TRANSITIONS\n";
 	for (int i = 0; i < sa.m_transitions.size(); i++)

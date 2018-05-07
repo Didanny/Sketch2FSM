@@ -8,10 +8,10 @@ CharacterClassifier::~CharacterClassifier()
 
 int CharacterClassifier::indexOf(Component t_component)
 {
-	int label = t_component.getLabel();
+	int label = t_component.m_label;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		if (label == m_chars.at(i).getLabel())
+		if (label == m_chars.at(i).m_label)
 		{
 			return i;
 		}
@@ -24,7 +24,7 @@ double CharacterClassifier::getMeanArea()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += m_chars.at(i).getArea();
+		sum += m_chars.at(i).m_area;
 	}
 	return (sum / m_chars.size());
 }
@@ -34,7 +34,7 @@ double CharacterClassifier::getMeanBoxArea()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += m_chars.at(i).getBoundingBox().area();
+		sum += m_chars.at(i).m_bounding_box.area();
 	}
 	return (sum / m_chars.size());
 }
@@ -45,7 +45,7 @@ double CharacterClassifier::getVarianceArea()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((m_chars.at(i).getArea() - mean), 2.0);
+		sum += pow((m_chars.at(i).m_area - mean), 2.0);
 	}
 	return sum / m_chars.size() - 1;
 }
@@ -56,7 +56,7 @@ double CharacterClassifier::getVarianceBoxArea()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((m_chars.at(i).getBoundingBox().area() - mean), 2.0);
+		sum += pow((m_chars.at(i).m_bounding_box.area() - mean), 2.0);
 	}
 	return sum / m_chars.size() - 1;
 }
@@ -79,7 +79,7 @@ double CharacterClassifier::getMeanHeight()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += m_chars.at(i).getBoundingBox().height;
+		sum += m_chars.at(i).m_bounding_box.height;
 	}
 	return (sum / m_chars.size());
 }
@@ -89,7 +89,7 @@ double CharacterClassifier::getMeanWidth()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += m_chars.at(i).getBoundingBox().width;
+		sum += m_chars.at(i).m_bounding_box.width;
 	}
 	return (sum / m_chars.size());
 }
@@ -100,7 +100,7 @@ double CharacterClassifier::getVarianceHeight()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((m_chars.at(i).getBoundingBox().height - mean), 2.0);
+		sum += pow((m_chars.at(i).m_bounding_box.height - mean), 2.0);
 	}
 	return sum / m_chars.size() - 1;
 }
@@ -111,7 +111,7 @@ double CharacterClassifier::getVarianceWidth()
 	double sum = 0;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		sum += pow((m_chars.at(i).getBoundingBox().width - mean), 2.0);
+		sum += pow((m_chars.at(i).m_bounding_box.width - mean), 2.0);
 	}
 	return sum / m_chars.size() - 1;
 }
@@ -135,13 +135,12 @@ void CharacterClassifier::findChars(Components& t_components)
 	double max_height = getMeanHeight() + tolerance * getStdevHeight();
 	for (int i = 0; i < t_components.size(); i++)
 	{
-		int height = t_components.at(i).getBoundingBox().height;
-		int width = t_components.at(i).getBoundingBox().width;
+		int height = t_components.at(i).m_bounding_box.height;
+		int width = t_components.at(i).m_bounding_box.width;
 		if (indexOf(t_components.at(i)) == -1 &&
 			width >= min_width && width <= max_width &&
 			height >= min_height && height <= max_height)
 		{
-			t_components.at(i).setClassified();
 			m_chars.push_back(t_components.at(i));
 			m_chars_unclassified.push_back(t_components.at(i));
 		}
@@ -153,7 +152,7 @@ std::vector<int> CharacterClassifier::getLabels()
 	std::vector<int> labels;
 	for (int i = 0; i < m_chars.size(); i++)
 	{
-		labels.push_back(m_chars.at(i).getLabel());
+		labels.push_back(m_chars.at(i).m_label);
 	}
 	return labels;
 }

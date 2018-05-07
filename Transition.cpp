@@ -13,8 +13,8 @@ std::string Transition::toString()
 {
 	if (m_arrow.m_corners.size() < 3) return "";
 	return "T," +
-		std::to_string(m_first_state.m_circle.getLabel()) + "," +
-		std::to_string(m_next_state.m_circle.getLabel()) + "," + 
+		std::to_string(m_first_state.m_circle.m_label) + "," +
+		std::to_string(m_next_state.m_circle.m_label) + "," + 
 		m_label + "," +
 		std::to_string(m_arrow.m_start.x) + "," +
 		std::to_string(m_arrow.m_start.y) + "," + 

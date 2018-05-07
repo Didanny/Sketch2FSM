@@ -30,7 +30,7 @@ cv::Mat ImageProcessor::forComponentDetector()
 
 cv::Mat ImageProcessor::containerImage(Container & t_container, cv::Mat t_labeled_image)
 {
-	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_container.m_container->getBoundingBox());
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_container.m_container->m_bounding_box);
 
 	cv::Mat container_image = cv::Mat(labeled_image.size(), CV_8UC3);
 	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
@@ -55,7 +55,7 @@ cv::Mat ImageProcessor::containerImage(Container & t_container, cv::Mat t_labele
 
 cv::Mat ImageProcessor::childrenImage(Container & t_container, cv::Mat t_labeled_image)
 {
-	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_container.m_container->getBoundingBox());
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_container.m_container->m_bounding_box);
 
 	cv::Mat container_image = cv::Mat(labeled_image.size(), CV_8UC3);
 	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
@@ -94,7 +94,7 @@ std::vector<cv::Vec4i> ImageProcessor::getHierarchy(Container& t_container, cv::
 
 cv::Mat ImageProcessor::componentImage(Component & t_component, cv::Mat t_labeled_image)
 {
-	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_component.getBoundingBox());
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_component.m_bounding_box);
 
 	cv::Mat component_image = cv::Mat(labeled_image.size(), CV_8UC3);
 	cv::Vec3b colors[2] = { cv::Vec3b(255, 255, 255), cv::Vec3b(0, 0, 0) };
@@ -104,7 +104,7 @@ cv::Mat ImageProcessor::componentImage(Component & t_component, cv::Mat t_labele
 		{
 			int label = labeled_image.at<int>(r, c);
 			cv::Vec3b &pixel = component_image.at<cv::Vec3b>(r, c);
-			if (label == t_component.getLabel())
+			if (label == t_component.m_label)
 			{
 				pixel = colors[1];
 			}
@@ -119,7 +119,7 @@ cv::Mat ImageProcessor::componentImage(Component & t_component, cv::Mat t_labele
 
 cv::Mat ImageProcessor::arrowImage(Arrow & t_arrow, Component & t_component, cv::Mat t_labeled_image)
 {
-	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_component.getBoundingBox());
+	cv::Mat labeled_image = cv::Mat(t_labeled_image, t_component.m_bounding_box);
 	cv::Mat component_image = componentImage(t_component, t_labeled_image);
 
 	cv::circle(component_image, t_arrow.m_start, 4, cv::Scalar(0, 255, 0), -1, 8, 0);
@@ -138,10 +138,10 @@ cv::Mat ImageProcessor::arrowLabelImage(Arrow & t_arrow, cv::Mat t_labeled_image
 
 	for (int i = 0; i < t_arrow.m_labels.size(); i++)
 	{
-		int my_min_x = t_arrow.m_labels.at(i).getBoundingBox().x;
-		int my_min_y = t_arrow.m_labels.at(i).getBoundingBox().y;
-		int my_max_x = t_arrow.m_labels.at(i).getBoundingBox().x + t_arrow.m_labels.at(i).getBoundingBox().width;
-		int my_max_y = t_arrow.m_labels.at(i).getBoundingBox().y + t_arrow.m_labels.at(i).getBoundingBox().height;
+		int my_min_x = t_arrow.m_labels.at(i).m_bounding_box.x;
+		int my_min_y = t_arrow.m_labels.at(i).m_bounding_box.y;
+		int my_max_x = t_arrow.m_labels.at(i).m_bounding_box.x + t_arrow.m_labels.at(i).m_bounding_box.width;
+		int my_max_y = t_arrow.m_labels.at(i).m_bounding_box.y + t_arrow.m_labels.at(i).m_bounding_box.height;
 		if (max_x < my_max_x) max_x = my_max_x;
 		if (max_y < my_max_y) max_y = my_max_y;
 		if (min_x > my_min_x) min_x = my_min_x;
