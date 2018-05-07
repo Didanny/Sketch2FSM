@@ -4,6 +4,7 @@
 SketchAnalyzer::SketchAnalyzer()
 {}
 
+// Destructor
 SketchAnalyzer::~SketchAnalyzer()
 {
 	delete m_image_processor;
@@ -11,8 +12,13 @@ SketchAnalyzer::~SketchAnalyzer()
 	delete m_circle_classifier;
 	delete m_circles;
 	delete m_arrow_classifier;
+	for (int i = 0; i < m_created_files.size(); i++)
+	{
+		std::remove(m_created_files.at(i).c_str());
+	}
 }
 
+// Read text file and return string
 std::string SketchAnalyzer::readLabel(std::string t_file)
 {
 	std::string line;
@@ -20,7 +26,6 @@ std::string SketchAnalyzer::readLabel(std::string t_file)
 	if (lbl_file.is_open())
 	{
 		std::getline(lbl_file, line);
-		//std::cout << line;
 	}
 	else
 	{
@@ -63,8 +68,6 @@ void SketchAnalyzer::findCharacters()
 {
 	m_chars = m_circles->getChars();
 	m_chars.findChars(m_component_detector->m_components);
-
-	//m_circles->initAcceptIndex();
 }
 
 // Finds the arrows
@@ -81,6 +84,7 @@ void SketchAnalyzer::findArrows()
 	m_circles->initAcceptIndex();
 }
 
+// Converts the labels to text
 void SketchAnalyzer::parseLabels()
 {
 	for (int i = 0; i < m_circles->m_circles.size(); i++)
@@ -88,6 +92,9 @@ void SketchAnalyzer::parseLabels()
 		cv::Mat container_image = m_image_processor->childrenImage(m_circles->m_circles.at(i), m_component_detector->m_labeled_image);
 		int label = m_circles->m_circles.at(i).m_container->m_label;
 		cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", container_image);
+
+		m_created_files.push_back("./temp/lbl" + std::to_string(label) + ".png");
+		m_created_files.push_back("./temp/lbl" + std::to_string(label) + ".txt");
 
 		std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
 		system(command.c_str());
@@ -101,12 +108,16 @@ void SketchAnalyzer::parseLabels()
 			int label = m_arrow_classifier->m_arrows_i.at(i).m_arrow.m_label;
 			cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", char_image);
 
-			std::string command = "./Tesseract-OCR/tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
+			m_created_files.push_back("./temp/lbl" + std::to_string(label) + ".png");
+			m_created_files.push_back("./temp/lbl" + std::to_string(label) + ".txt");
+
+			std::string command = "./tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
 			system(command.c_str());
 		}
 	}
 }
 
+// Converts the circles to states
 void SketchAnalyzer::createStates()
 {
 	int accept = m_circles->m_accept_index;
@@ -122,6 +133,7 @@ void SketchAnalyzer::createStates()
 	}
 }
 
+// Converts the arrows to transitions
 void SketchAnalyzer::createTransitions()
 {
 	m_arrow_classifier->initPaths(m_states);
@@ -141,6 +153,7 @@ void SketchAnalyzer::createTransitions()
 	}
 }
 
+// Outputs the States and Transitions to a text file
 void SketchAnalyzer::outputFile()
 {
 	std::ofstream output;
