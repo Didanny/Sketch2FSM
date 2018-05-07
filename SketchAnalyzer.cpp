@@ -111,7 +111,7 @@ void SketchAnalyzer::parseLabels()
 			m_created_files.push_back("./temp/lbl" + std::to_string(label) + ".png");
 			m_created_files.push_back("./temp/lbl" + std::to_string(label) + ".txt");
 
-			std::string command = "./tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
+			std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
 			system(command.c_str());
 		}
 	}

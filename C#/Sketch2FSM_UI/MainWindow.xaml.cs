@@ -20,10 +20,6 @@ using System.Text.RegularExpressions;
 namespace Sketch2FSM_UI
 {
     //C:\Users\Danny\Desktop\AUB\EECE 437\OpenCVtest\OpenCVtest\C#\sketch2fsmlib\x64\Debug\sketch2fsmlib.dll
-
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         //[DllImport("C:\\Users\\Danny\\Desktop\\AUB\\EECE 437\\OpenCVtest\\OpenCVtest\\C#\\sketch2fsmlib\\x64\\Debug\\sketch2fsmlib.dll",
@@ -70,37 +66,35 @@ namespace Sketch2FSM_UI
         //CallingConvention = CallingConvention.Cdecl)]
         //public static extern void OutputFile();
 
+
+        public static string FilePath = "C:\\Users\\Danny\\Desktop\\AUB\\EECE 437\\OpenCVtest\\x64\\Debug\\OpenCVtest.exe";
         public string ImagePath;
 
         public MainWindow()
         {
             InitializeComponent();
-            KeyDown += MainWindowKeyDown;
-            DrawingSurface.MouseMove += DrawingSurfaceMouseMove;
-            DrawingSurface.MouseDown += DrawingSurfaceMouseDown;
-            DrawingSurface.MouseUp += DrawingSurfaceMouseUp;
-            //_pen = new Pen(DrawingSurface);
-            //DrawingSurface.Focus();
         }
 
-        public int imageWidth;
-        public int imageHeight;
-
+        // List of components ad selected index
         public List<IDrawable> components;
         public int selected = 0;
 
+        // The mouse click coords
         double origin_x;
         double origin_y;
         double final_x;
         double final_y;
 
+        // Used to give labels to newly added states, negative labels not to conflict with OpenCV labels
         int numNewStates = 0;
 
+        // Euclidean distance between 2 points
         public double Distance(double x1, double x2, double y1, double y2)
         {
             return Math.Sqrt(Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2));
         }
 
+        // Draw the new component and add it to the components List
         private void DrawingSurfaceMouseUp(object sender, MouseButtonEventArgs e)
         {
             BeginInvoke(new Action(() => {
@@ -142,10 +136,8 @@ namespace Sketch2FSM_UI
                         Height = 5,
                         Width = 5
                     }));
-                    //selected = components.Count;
                     Debug.WriteLine("Components=" + components.Count.ToString());
                 }
-                //components = components.Distinct().ToList();
                 Redraw();
             }));
         }
@@ -156,53 +148,25 @@ namespace Sketch2FSM_UI
             action.Invoke();
         }
 
+        // Store the mouse position of where the drag started
         private void DrawingSurfaceMouseDown(object sender, MouseButtonEventArgs e)
         {
-            //if (LineRadioButton.IsChecked == true)
-            // _dr = new MyPath(Mouse.GetPosition(DrawingSurface));
-            // else if (CircleRadioButton.IsChecked == true)
-            //try
-            //{
-            //    _dr = new MyCircle(Mouse.GetPosition(DrawingSurface));
-            //    _pen.Down(_dr);
-            //}
-            //catch
-            //{
-            //    return;
-            //}
             origin_x = Mouse.GetPosition(DrawingSurface).X;// * ImageDimensions.Image.width / ImageDimensions.Panel.width;
             origin_y = Mouse.GetPosition(DrawingSurface).Y;// * ImageDimensions.Image.height / ImageDimensions.Panel.width;
-
-            Debug.WriteLine("First point:" + origin_x.ToString() + "," + origin_y.ToString());
         }
 
-        private void DrawingSurfaceMouseMove(object sender, MouseEventArgs e)
-        {
-            //if (_dr != null)
-            //    _pen.Draw(_dr, Mouse.GetPosition(DrawingSurface));
-        }
-
-        private void MainWindowKeyDown(object sender, KeyEventArgs e)
-        {
-            //if (e.Key == Key.Enter)
-            //    DrawingSurface.Children.Clear();
-        }
-
-
-
+        // Get the path of the image that was dropped and show it
         public void ImagePanel_Drop(object sender, DragEventArgs e)
         {
 
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                // Can have more than one file
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
 
-                // Setting label content to full path of file
-                //TestLabel.Content = files[0].ToString();
-
+                // Store the path of the image
                 ImagePath = files[0].ToString();
 
+                // Show the image dropped
                 Image i = new Image();
                 BitmapImage src = new BitmapImage();
                 src.BeginInit();
@@ -211,12 +175,12 @@ namespace Sketch2FSM_UI
                 src.EndInit();
                 i.Source = src;
                 i.Stretch = Stretch.Uniform;
-                //int q = src.PixelHeight;        // Image loads here
                 sp.Children.Add(i);
                 ImagePanel.Height = 0;
             }
         }
 
+        // Read output file and initialize the components list
         private void Start_Click(object sender, RoutedEventArgs e)
         {
             if (ImagePath.Length < 1) return;
@@ -224,7 +188,7 @@ namespace Sketch2FSM_UI
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = false;
             startInfo.UseShellExecute = false;
-            startInfo.FileName = "./OpenCVtest.exe";// C:\\Users\\Danny\\Desktop\\AUB\\EECE 437\\OpenCVtest\\x64\\Debug\\OpenCVtest.exe";
+            startInfo.FileName = FilePath;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
             startInfo.Arguments = "\"" + ImagePath +"\"";
 
@@ -238,22 +202,15 @@ namespace Sketch2FSM_UI
             string[] splitted;
             System.IO.StreamReader file = new System.IO.StreamReader(@"./output.txt");
 
+            // Split the first line, the image dimensions
             line = file.ReadLine();
             splitted = line.Split(',');
 
-            imageWidth = Int32.Parse(splitted[0]);
-            imageHeight = Int32.Parse(splitted[1]);
-
+            // Store the image dimesnions
             ImageDimensions.Image.width = Int32.Parse(splitted[0]);
             ImageDimensions.Image.height = Int32.Parse(splitted[1]);
             ImageDimensions.Panel.width = (int)((0.75 * Width) - 100);
             ImageDimensions.Panel.height = (int)(((0.75 * Width) - 100) / 1.7);
-
-            //Debug.WriteLine(ImageDimensions.Image.width);
-            //Debug.WriteLine(ImageDimensions.Image.height);
-            //Debug.WriteLine(ImageDimensions.Panel.width);
-            //Debug.WriteLine(ImageDimensions.Panel.height);
-
 
             components = new List<IDrawable>();
 
@@ -282,17 +239,6 @@ namespace Sketch2FSM_UI
                 else components.ElementAt(i).Draw(DrawingSurface, Brushes.Black);
             }
 
-            // Initalize the editting panel
-            //if (components.ElementAt(selected) is State)
-            //{
-            //    State state = (State)components.ElementAt(selected);
-            //    Label.Text = state.name;
-            //}
-            //else if (components.ElementAt(selected) is Transition)
-            //{
-            //    Transition trans = (Transition)components.ElementAt(selected);
-            //    Label.Text = trans.label;
-            //}
             InitStatePanel();
             DisplayComponentInfo();
 
@@ -302,6 +248,7 @@ namespace Sketch2FSM_UI
             Done.Visibility = Visibility.Visible;
         }
 
+        // Redraw the components, color red if selected
         public void Redraw()
         {
             ImageDimensions.Panel.width = (int)((0.75 * Width) - 100);
@@ -321,18 +268,21 @@ namespace Sketch2FSM_UI
             Redraw();
         }
 
+        // Initializes the state panel
         private void InitStatePanel()
         {
             ArrowPanel.Visibility = Visibility.Collapsed;
             StatePanel.Visibility = Visibility.Visible;
         }
 
+        // Initializes the arrow panel
         private void InitArrowPanel()
         {
             StatePanel.Visibility = Visibility.Collapsed;
             ArrowPanel.Visibility = Visibility.Visible;
         }
 
+        // Displays the current selected component's info in the Editting Panel
         private void DisplayComponentInfo()
         {
             // Display the information of the next component
@@ -359,6 +309,7 @@ namespace Sketch2FSM_UI
             }
         }
 
+        // Finds the name of a state whose label is label
         private string FindStateName(int label)
         {
             foreach (IDrawable d in components)
@@ -375,6 +326,7 @@ namespace Sketch2FSM_UI
             return "unknown";
         }
 
+        // For a given string, finds the label of the state whose name is name
         private int FindStateLabel(string name)
         {
             foreach (IDrawable d in components)
@@ -391,6 +343,7 @@ namespace Sketch2FSM_UI
             return 0;
         }
 
+        // Saves the changes the user made
         private void SaveChanges()
         {
             // Save changes made previously
@@ -409,6 +362,7 @@ namespace Sketch2FSM_UI
             }
         }
 
+        // Buggy for some reason, ommitted for now
         private void Left_Click(object sender, RoutedEventArgs e)
         {
             //// Save changes made previously
@@ -423,6 +377,7 @@ namespace Sketch2FSM_UI
             //DisplayComponentInfo();
         }
 
+        // Rotate through the components
         private void Right_Click(object sender, RoutedEventArgs e)
         {
             // Save changes made previously
@@ -436,6 +391,7 @@ namespace Sketch2FSM_UI
             DisplayComponentInfo();
         }
 
+        // Flips the direction of the arrow selected
         private void Flip_Click(object sender, RoutedEventArgs e)
         {
             Transition trans = (Transition)components.ElementAt(selected);
@@ -467,6 +423,7 @@ namespace Sketch2FSM_UI
             Redraw();
         }
 
+        // Deletes the selected component
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             if (components.Count != 0)
@@ -489,6 +446,7 @@ namespace Sketch2FSM_UI
             DisplayComponentInfo();
         }
 
+        // Cleans up the state names according to VHDL syntax
         private string CleanUpName(string name)
         {
             name = name.ToUpper();
@@ -497,6 +455,7 @@ namespace Sketch2FSM_UI
             return name;
         }
 
+        // Takes all the changes made by the user and outputs the VHDL file
         private void Done_Click(object sender, RoutedEventArgs e)
         {
             SaveChanges();
@@ -593,6 +552,7 @@ namespace Sketch2FSM_UI
                 OutVHDL.WriteLine();
                 OutVHDL.WriteLine("end Behavioral;");
             }
+            Done.Visibility = Visibility.Hidden;
         }
     }
 }
