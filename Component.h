@@ -5,9 +5,6 @@
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
 
-//#include "C#\sketch2fsmlib\stdafx.h"
-
-
 struct Component
 {
 
@@ -20,14 +17,9 @@ struct Component
 
 	Component(int t_x, int t_y, int t_width, int t_height, int t_area, double t_cx, double t_cy, int t_label); // Constructor
 	~Component(); // Destructor
-	//cv::Rect m_bounding_box; // Returns the bounding box of the component
-	//int m_area; // Returns the are in pixels
+
 	bool contains(Component& t_component); // Returns true if this bounding box is completely within the t_component bounding box
 	void setContainer(Component& t_component); // Sets m_container to t_component
-	Component* getContainer(); // Returns pointer to the container
-	cv::Point getCentroid(); // Returns the centroid
 	Component copy(); // Returns a copy of the component
-	bool isContainer();
-	void setAsContainer();
-	//int m_label; // Returns label
+	void setAsContainer(); // Sets the component as a container
 };

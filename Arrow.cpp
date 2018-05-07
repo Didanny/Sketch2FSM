@@ -1,6 +1,6 @@
 #include "Arrow.h"
-#include <iostream>
 
+// Constructor
 Arrow::Arrow(std::vector<cv::Point2f> t_corners, Component& t_arrow)
 	: m_corners(t_corners), m_arrow(t_arrow)
 {
@@ -11,22 +11,23 @@ Arrow::Arrow(std::vector<cv::Point2f> t_corners, Component& t_arrow)
 	m_visited.at(0) = true;
 }
 
+// Destructor
 Arrow::~Arrow()
-{
-}
+{}
 
+// Gets the nearest unvisited point, from the current point
 int Arrow::getNearestPoint(cv::Point2f t_point)
 {
 	cv::Point2f current_point = t_point;
 	cv::Point2f nearest_point;
 	float min_distance = 99999999;
 	int nearest_index = -1;
+	// Find the nearest unvisitec corner
 	for (int i = 0; i < m_corners.size(); i++)
 	{
 		if (m_visited.at(i)) continue;
 
 		cv::Point2f next_point = m_corners.at(i);
-		//m_visited.at(i) = true;
 		float current_distance = sqrt(pow((current_point.x - next_point.x), 2) + pow((current_point.y - next_point.y), 2));
 
 		if (current_distance < min_distance)
@@ -35,12 +36,15 @@ int Arrow::getNearestPoint(cv::Point2f t_point)
 			min_distance = current_distance;
 		}
 	}
-	//m_visited.at(nearest_index) = true;
 	return nearest_index;
 }
 
+// Initialize the start and end of the arrow
 void Arrow::initArrow()
 {
+	// Given the corners of the arrow connect the dots to find the skeleton of the arrow
+	// while recording the slopes of the lines made. Points where the slope changes a lot
+	// are candidates for the head, according to this the start is determines afterwards
 	if (m_corners.size() < 3)
 	{
 		m_start = m_end = m_corners.at(0);
@@ -60,30 +64,23 @@ void Arrow::initArrow()
 	int end_index = 0;
 	while (next_index < m_corners.size() && next_index > -1)
 	{
-		//if (arrow0.m_visited.at(i)) continue;
 		next_point = m_corners.at(next_index);
 		m_visited.at(next_index) = true;
 
 		current_slope = (next_point.y - current_point.y) / (next_point.x - current_point.x);
-		//std::cout << "slope=" << current_slope << "\n";
-		//cv::line(arrow_0copy, current_point, next_point, cv::Scalar(0, 255, 0));
 		current_point = next_point;
 		next_index = getNearestPoint(current_point);
 
 		double angle;
 		if (!first)
 		{
+			// Calcuate angle between current line and previous line
 			angle = abs(atan((current_slope - previous_slope) / (1 + (current_slope * previous_slope))));
-			//std::cout << angle << "\n";
+			// Find the points where the slope changes a long and push them to a stack
 			if (angle > max_angle)
 			{
 				end_stack.push(current_point);
 			}
-			//if (angle > 1.39 && angle < 1.75)
-			//{
-			//	ends.push_back(current_point);
-			//	circle(arrow_0copy, current_point, r, cv::Scalar(255, 0, 0), -1, 8, 0);
-			//}
 		}
 		first = false;
 		previous_slope = current_slope;
@@ -91,9 +88,10 @@ void Arrow::initArrow()
 	}
 	float sum_x = 0;
 	float sum_y = 0;
+
+	// Average out the points where the slope changes a lot, this will be the head
 	for (int i = 0; i < 3; i++)
 	{
-		//circle(arrow_0copy, end_stack.top(), r, cv::Scalar(255, 0, 0), -1, 8, 0);
 		sum_x += end_stack.top().x;
 		sum_y += end_stack.top().y;
 		end_stack.pop();
@@ -102,6 +100,9 @@ void Arrow::initArrow()
 	m_end = end;
 	cv::Point2f s1 = m_corners.at(0);
 	cv::Point2f s2 = m_corners.at(end_index);
+
+	// Decide whether to keep the start unchanged or move it to the other side if it is
+	// too close to the head
 	float d1 = sqrt(pow((s1.x - end.x), 2) + pow((s1.y - end.y), 2));
 	float d2 = sqrt(pow((s2.x - end.x), 2) + pow((s2.y - end.y), 2));
 	if (d1 > d2)
@@ -112,8 +113,13 @@ void Arrow::initArrow()
 	{
 		m_start = s2;
 	}
+
+
 	float shift_x = m_arrow.m_bounding_box.x;
 	float shift_y = m_arrow.m_bounding_box.y;
+	
+	// Shift the points by the bounding box coords so they correspond to absolute positions
+	// in the original image
 	m_start.x += shift_x;
 	m_start.y += shift_y;
 	m_end.x += shift_x;
@@ -121,31 +127,25 @@ void Arrow::initArrow()
 	return;
 }
 
+// Adds a character to the m_labels vector
 void Arrow::addLabel(Component & t_label)
 {
 	m_labels.push_back(t_label);
 }
 
+// Initializes the state pointers
 void Arrow::initPath(std::vector<State>& t_states)
 {
+	// Find the nearest state to the start point and the end point and set
+	// the state pointers accordingly
 	double min_start_dist = std::numeric_limits<double>::max();
 	double min_end_dist = std::numeric_limits<double>::max();
 	for (int j = 0; j < t_states.size(); j++)
 	{
-		cv::Point2f state_center = t_states.at(j).m_circle.getCentroid();
-
-		std::cout << state_center << "\n";
-		std::cout << "Start=" << m_start << " End=" << m_end << "\n";
+		cv::Point2f state_center = t_states.at(j).m_circle.m_centroid;
 
 		double dist_start = distance(state_center, m_start) - t_states.at(j).getRadius();
 		double dist_end = distance(state_center, m_end) - t_states.at(j).getRadius();
-		
-		//std::cout << "dist_start=" << dist_start << std::endl;
-		//std::cout << "dist_end=" << dist_end << std::endl;
-
-		std::cout << "Arrow" << m_arrow.m_label << "\n";
-		std::cout << "Distance from " + t_states.at(j).m_name << " " << dist_end << "\n";
-		std::cout << "Distance from " + t_states.at(j).m_name << " " << dist_start << "\n\n";
 
 		if (dist_start < min_start_dist)
 		{
@@ -160,6 +160,7 @@ void Arrow::initPath(std::vector<State>& t_states)
 	}
 }
 
+// Returns a vector of the compinent labels of the arrow labels
 std::vector<int> Arrow::getLabelLabels()
 {
 	std::vector<int> labels;
@@ -170,12 +171,8 @@ std::vector<int> Arrow::getLabelLabels()
 	return labels;
 }
 
+// Euclidean distance between 2 points
 double distance(cv::Point2f & t_first, cv::Point2f & t_second)
 {
 	return sqrt(pow((t_first.x - t_second.x), 2) + pow((t_first.y - t_second.y), 2));;
-}
-
-double distance_overflow(cv::Point2f & t_first, cv::Point2f & t_second)
-{
-	return sqrt(pow((t_first.x - t_second.x)/1000000000000.0, 2) + pow((t_first.y - t_second.y)/1000000000000.0, 2));;
 }

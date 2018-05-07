@@ -3,17 +3,13 @@
 #include "State.h"
 #include "Arrow.h"
 
-class Transition
+struct Transition
 {
-private:
+	State m_first_state; // The state the transition starts at
+	State m_next_state; // The next state if the transition succeeds
+	std::string m_label; // The label of the arrow
 
-public:
-	State m_first_state;
-	State m_next_state;
-	std::string m_label;
-
-	Arrow m_arrow;
-
+	Arrow m_arrow; // The arrow representing this transition
 
 	Transition(State& t_first_state, State& t_next_state, Arrow& t_arrow, std::string t_label); // Constructor
 	~Transition(); // Destructor

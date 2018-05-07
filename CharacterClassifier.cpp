@@ -1,11 +1,14 @@
 #include "CharacterClassifier.h"
 
+// Constructor
 CharacterClassifier::CharacterClassifier()
 {}
 
+// Destructor
 CharacterClassifier::~CharacterClassifier()
 {}
 
+// Returns index of t_component if found, -1 if not
 int CharacterClassifier::indexOf(Component t_component)
 {
 	int label = t_component.m_label;
@@ -19,61 +22,7 @@ int CharacterClassifier::indexOf(Component t_component)
 	return -1;
 }
 
-double CharacterClassifier::getMeanArea()
-{
-	double sum = 0;
-	for (int i = 0; i < m_chars.size(); i++)
-	{
-		sum += m_chars.at(i).m_area;
-	}
-	return (sum / m_chars.size());
-}
-
-double CharacterClassifier::getMeanBoxArea()
-{
-	double sum = 0;
-	for (int i = 0; i < m_chars.size(); i++)
-	{
-		sum += m_chars.at(i).m_bounding_box.area();
-	}
-	return (sum / m_chars.size());
-}
-
-double CharacterClassifier::getVarianceArea()
-{
-	double mean = getMeanArea();
-	double sum = 0;
-	for (int i = 0; i < m_chars.size(); i++)
-	{
-		sum += pow((m_chars.at(i).m_area - mean), 2.0);
-	}
-	return sum / m_chars.size() - 1;
-}
-
-double CharacterClassifier::getVarianceBoxArea()
-{
-	double mean = getMeanBoxArea();
-	double sum = 0;
-	for (int i = 0; i < m_chars.size(); i++)
-	{
-		sum += pow((m_chars.at(i).m_bounding_box.area() - mean), 2.0);
-	}
-	return sum / m_chars.size() - 1;
-}
-
-double CharacterClassifier::getStdev(Stat t_stat)
-{
-	if (t_stat == PIX)
-	{
-		return sqrt(getVarianceArea());
-	}
-	else if (t_stat == BOX)
-	{
-		return sqrt(getVarianceBoxArea());
-	}
-	return -1;
-}
-
+// Returns mean of heights
 double CharacterClassifier::getMeanHeight()
 {
 	double sum = 0;
@@ -84,6 +33,7 @@ double CharacterClassifier::getMeanHeight()
 	return (sum / m_chars.size());
 }
 
+// Returns mean of widths
 double CharacterClassifier::getMeanWidth()
 {
 	double sum = 0;
@@ -94,6 +44,7 @@ double CharacterClassifier::getMeanWidth()
 	return (sum / m_chars.size());
 }
 
+// Returns variance of heights
 double CharacterClassifier::getVarianceHeight()
 {
 	double mean = getMeanHeight();
@@ -105,6 +56,7 @@ double CharacterClassifier::getVarianceHeight()
 	return sum / m_chars.size() - 1;
 }
 
+// Returns variance of widths
 double CharacterClassifier::getVarianceWidth()
 {
 	double mean = getMeanWidth();
@@ -116,18 +68,22 @@ double CharacterClassifier::getVarianceWidth()
 	return sum / m_chars.size() - 1;
 }
 
+// Return standard deviation of heights
 double CharacterClassifier::getStdevHeight()
 {
 	return sqrt(getVarianceHeight());
 }
 
+// Returns standard deviation of widths
 double CharacterClassifier::getStdevWidth()
 {
 	return sqrt(getVarianceWidth());
 }
 
+// Finds remaining characters in image
 void CharacterClassifier::findChars(Components& t_components)
 {
+	// The assumption here is that the characters are all of similar font size
 	int tolerance = 6;
 	double min_width = getMeanWidth() - tolerance * getStdevWidth();
 	double max_width = getMeanWidth() + tolerance * getStdevWidth();
@@ -147,6 +103,7 @@ void CharacterClassifier::findChars(Components& t_components)
 	}
 }
 
+// Retusn vector of labels of the character components
 std::vector<int> CharacterClassifier::getLabels()
 {
 	std::vector<int> labels;

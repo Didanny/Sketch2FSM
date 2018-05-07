@@ -5,16 +5,14 @@
 
 #include <string>
 
-class State
+struct State
 {
-private:
+	std::string m_name; // Label of the state
+	bool m_is_accept; // True if the state is an accept state
 
-public:
-	std::string m_name;
-	Component m_circle;
-	bool m_is_accept;
+	Component m_circle; // Circle of the state
 
-	State(Component t_component, std::string t_name); // Constructor
+	State(Component& t_component, std::string t_name); // Constructor
 	~State(); // Destructor
 
 	void setAccept(); // Sets state as accept state

@@ -1,6 +1,6 @@
 #include "ArrowClassifier.h"
-#include <iostream>
 
+// Constructor
 ArrowClassifier::ArrowClassifier(Components & t_components, std::vector<int> t_labels)
 {
 	for (int i = 0; i < t_components.size(); i++)
@@ -12,108 +12,61 @@ ArrowClassifier::ArrowClassifier(Components & t_components, std::vector<int> t_l
 	}
 }
 
+// Destructor
 ArrowClassifier::~ArrowClassifier()
-{
-}
+{}
 
+// Returns vector of labels of the arrows 
 std::vector<int> ArrowClassifier::getLabels()
 {
 	std::vector<int> labels;
-	for (int i = 0; i < m_arrows.size(); i++)
+	for (int i = 0; i < m_arrows_i.size(); i++)
 	{
-		labels.push_back(m_arrows.at(i).m_label);
+		labels.push_back(m_arrows_i.at(i).m_arrow.m_label);
 	}
 	return labels;
 }
 
-cv::Point2f ArrowClassifier::getNearestPoint(cv::Point2f t_point, std::vector<cv::Point2f> t_corners)
-{
-	//cv::Point2f nearest_point;
-	//float min_distance = 99999999;
-	//for (int i = 0; i < corners.size(); i++)
-	//{
-	//	if (visited.at(i) || current_point == corners.at(i)) continue;
-
-	//	cv::Point2f next_point = corners.at(i);
-	//	visited.at(i) = true;
-	//	float current_distance = sqrt(pow((current_point.x - next_point.x), 2) + pow((current_point.y - next_point.y), 2));
-
-	//	if (current_distance < min_distance)
-	//	{
-	//		min_distance = current_distance;
-	//		nearest_point = next_point;
-	//	}
-	//}
-	return cv::Point2f();
-}
-
+// Initialize the m_arrows_i vector
 void ArrowClassifier::initArrows(ImageProcessor& t_image_processor, ComponentDetector& t_component_detector)
 {
 	for (int i = 0; i < m_arrows.size(); i++)
 	{
-		std::vector<cv::Point2f> corners = t_image_processor.getFeatures(t_image_processor.componentImage(m_arrows.at(i), t_component_detector.getLabeledImage()));
+		std::vector<cv::Point2f> corners = t_image_processor.getFeatures(t_image_processor.componentImage(m_arrows.at(i), t_component_detector.m_labeled_image));
 		Arrow arrow(corners, m_arrows.at(i));
+		// Find the start and end of the arrow
 		arrow.initArrow();
 		m_arrows_i.push_back(arrow);
 	}
 }
 
+// Finds the closest arrow to each character and links them
 void ArrowClassifier::initArrowLabels(Components & t_chars)
 {
 	Component* min_component = NULL;
-	//for (int i = 0; i < t_chars.size(); i++)
-	//{
-	//	cv::Point2f char_center = t_chars.at(i).getCentroid();
-	//	for (int j = 0; j < m_arrows.size(); i++)
-	//	{
-	//		cv::Point2f arrow_center = m_arrows.at(j).getCentroid();
-	//		double dist = distance(arrow_center, char_center);
-	//		if (dist < min)
-	//		{
-	//			min = dist;
-	//			min_component = &m_arrows.at(j);
-	//		}
-	//	}
-	//}
-
+	// Iterate over all characters
 	for (int i = 0; i < t_chars.size(); i++)
 	{
+		// Find the arrow closest to each
 		double min = 999999999;
-		cv::Point2f char_center = t_chars.at(i).getCentroid();
+		cv::Point2f char_center = t_chars.at(i).m_centroid;
 		Arrow* arrow_to_add = NULL;
 		for (int j = 0; j < m_arrows.size(); j++)
 		{
-			cv::Point2f arrow_center = m_arrows.at(j).getCentroid();
+			cv::Point2f arrow_center = m_arrows.at(j).m_centroid;
 			double dist = distance(arrow_center, char_center);
-			//std::cout << "Arrow" << m_arrows.at(j).m_label << " dist=" << dist << "\n";
 			if (dist < min)
 			{
 				min = dist;
 				arrow_to_add = &m_arrows_i.at(j);
 			}
 		}
+		// Add the character to the arrow's label vector
 		if (arrow_to_add) arrow_to_add->addLabel(t_chars.at(i));
-		//std::cout << "Added char" << t_chars.at(i).m_label << " to arrow" << (*arrow_to_add).m_arrow.m_label << std::endl;
 	}
-
-	//for (int i = 0; i < m_arrows.size(); i++)
-	//{
-	//	double min = 999999999;
-	//	cv::Point2f arrow_center = m_arrows.at(i).getCentroid();
-	//	for (int j = 0; j < t_chars.size(); j++)
-	//	{
-	//		cv::Point2f char_center = t_chars.at(j).getCentroid();
-	//		double dist = distance(arrow_center, char_center);
-	//		if (dist < min)
-	//		{
-	//			min = dist;
-	//			min_component = &t_chars.at(j);
-	//		}
-	//	}
-	//	if (min_component != NULL) m_arrows_i.at(i).addLabel(*min_component);
-	//}
 }
 
+// Returns vector of labels of the arrow characters
 std::vector<int> ArrowClassifier::getLabelLabels()
 {
 	std::vector<int> labels;
@@ -128,6 +81,7 @@ std::vector<int> ArrowClassifier::getLabelLabels()
 	return labels;
 }
 
+// Initializes the states of each arrow
 void ArrowClassifier::initPaths(std::vector<State>& t_states)
 {
 	for (int i = 0; i < m_arrows_i.size(); i++)

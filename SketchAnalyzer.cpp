@@ -47,8 +47,8 @@ void SketchAnalyzer::findConnectedComponents()
 void SketchAnalyzer::findContainers()
 {
 	m_component_detector->findContainers();
-	m_circle_classifier = new CircleClassifier(m_component_detector->getLabeledImage());
-	m_circle_classifier->initContainers(m_component_detector->getComponents());
+	m_circle_classifier = new CircleClassifier(m_component_detector->m_labeled_image);
+	m_circle_classifier->initContainers(m_component_detector->m_components);
 }
 
 // Finds the circles among the containers
@@ -62,7 +62,7 @@ void SketchAnalyzer::findCircles()
 void SketchAnalyzer::findCharacters()
 {
 	m_chars = m_circles->getChars();
-	m_chars.findChars(m_component_detector->getComponents());
+	m_chars.findChars(m_component_detector->m_components);
 
 	//m_circles->initAcceptIndex();
 }
@@ -74,7 +74,7 @@ void SketchAnalyzer::findArrows()
 	std::vector<int> labels = m_chars.getLabels();
 	labels_all.insert(labels_all.end(), labels.begin(), labels.end());
 
-	m_arrow_classifier = new ArrowClassifier(m_component_detector->getComponents(), labels_all);
+	m_arrow_classifier = new ArrowClassifier(m_component_detector->m_components, labels_all);
 	m_arrow_classifier->initArrows(*m_image_processor, *m_component_detector);
 	m_arrow_classifier->initArrowLabels(m_chars.m_chars_unclassified);
 
@@ -83,10 +83,10 @@ void SketchAnalyzer::findArrows()
 
 void SketchAnalyzer::parseLabels()
 {
-	for (int i = 0; i < m_circles->getCircles().size(); i++)
+	for (int i = 0; i < m_circles->m_circles.size(); i++)
 	{
-		cv::Mat container_image = m_image_processor->childrenImage(m_circles->getCircles().at(i), m_component_detector->getLabeledImage());
-		int label = m_circles->getCircles().at(i).m_container->m_label;
+		cv::Mat container_image = m_image_processor->childrenImage(m_circles->m_circles.at(i), m_component_detector->m_labeled_image);
+		int label = m_circles->m_circles.at(i).m_container->m_label;
 		cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", container_image);
 
 		std::string command = "tesseract ./temp/lbl" + std::to_string(label) + ".png ./temp/lbl" + std::to_string(label) + " -l eng";
@@ -97,7 +97,7 @@ void SketchAnalyzer::parseLabels()
 		for (int j = 0; j < m_arrow_classifier->m_arrows_i.at(i).m_labels.size(); j++)
 		{
 			Component character = m_arrow_classifier->m_arrows_i.at(i).m_labels.at(j);
-			cv::Mat char_image = m_image_processor->arrowLabelImage(m_arrow_classifier->m_arrows_i.at(i), m_component_detector->getLabeledImage());
+			cv::Mat char_image = m_image_processor->arrowLabelImage(m_arrow_classifier->m_arrows_i.at(i), m_component_detector->m_labeled_image);
 			int label = m_arrow_classifier->m_arrows_i.at(i).m_arrow.m_label;
 			cv::imwrite("./temp/lbl" + std::to_string(label) + ".png", char_image);
 
@@ -111,12 +111,12 @@ void SketchAnalyzer::createStates()
 {
 	int accept = m_circles->m_accept_index;
 	std::string path = "./temp/lbl";
-	for (int i = 0; i < m_circles->getCircles().size(); i++)
+	for (int i = 0; i < m_circles->m_circles.size(); i++)
 	{
-		Component circle = *(m_circles->getCircles().at(i).m_container);
+		Component circle = *(m_circles->m_circles.at(i).m_container);
 		int lbl = circle.m_label;
 		std::string label = readLabel(path + std::to_string(lbl) + ".txt");
-		State state(*(m_circles->getCircles().at(i).m_container), label);
+		State state(*(m_circles->m_circles.at(i).m_container), label);
 		if (i == accept) state.setAccept();
 		m_states.push_back(state);
 	}
@@ -145,7 +145,7 @@ void SketchAnalyzer::outputFile()
 {
 	std::ofstream output;
 	output.open("./output.txt");
-	output << m_image_processor->originalImage().cols << "," << m_image_processor->originalImage().rows << "\n";
+	output << m_image_processor->m_image.cols << "," << m_image_processor->m_image.rows << "\n";
 	for (int i = 0; i < m_states.size(); i++)
 	{
 		output << m_states.at(i).toString();// << "\n";

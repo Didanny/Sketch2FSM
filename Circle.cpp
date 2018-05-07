@@ -1,25 +1,23 @@
 #include "Circle.h"
 
+// Constructor
 Circles::Circles(Containers t_circles)
 	: m_circles(t_circles)
 {
 }
 
+// Destructor
 Circles::~Circles()
 {
 }
 
-Containers Circles::getCircles()
-{
-	return m_circles;
-}
-
+// Returns vector of the children of the circles
 CharacterClassifier Circles::getChars()
 {
 	CharacterClassifier chars;
 	for (int i = 0; i < m_circles.size(); i++)
 	{
-		Components children = m_circles.at(i).getChildren();
+		Components children = m_circles.at(i).m_children;
 		for (int j = 0; j < children.size(); j++) 
 		{
 			if (isCircle(children.at(j))) continue;
@@ -29,6 +27,7 @@ CharacterClassifier Circles::getChars()
 	return chars;
 }
 
+// Returns true if components is a circle
 bool Circles::isCircle(Component & t_component)
 {
 	int label = t_component.m_label;
@@ -42,6 +41,7 @@ bool Circles::isCircle(Component & t_component)
 	return false;
 }
 
+// Returns vector of labels of the circles
 std::vector<int> Circles::getLabels()
 {
 	std::vector<int> labels;
@@ -52,15 +52,19 @@ std::vector<int> Circles::getLabels()
 	return labels;
 }
 
+// Initializing the accept Index
 void Circles::initAcceptIndex()
 {
+	// Finds the accept circle, ie the big circle around the accept state
+	// removes this circle from the m_circles vector and sets the child index
+	// as the m_accept_index
 	for (int i = 0; i < m_circles.size(); i++)
 	{
-		for (int j = 0; j < m_circles.at(i).getChildren().size(); j++)
+		for (int j = 0; j < m_circles.at(i).m_children.size(); j++)
 		{
-			if (isCircle(m_circles.at(i).getChildren().at(j)))
+			if (isCircle(m_circles.at(i).m_children.at(j)))
 			{
-				int child_label = m_circles.at(i).getChildren().at(j).m_label;
+				int child_label = m_circles.at(i).m_children.at(j).m_label;
 				Component big_circle = *m_circles.at(i).m_container;
 				m_circles.erase(m_circles.begin() + i);
 				for (int k = 0; k < m_circles.size(); k++)
