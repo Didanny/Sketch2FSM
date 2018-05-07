@@ -1,8 +1,16 @@
 c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\vc141.pdb
 c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\vc141.idb
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\imageprocessor.obj
 c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\source.obj
-c:\users\danny\desktop\aub\eece 437\opencvtest\x64\debug\opencvtest.ilk
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\circledetector.obj
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\component.obj
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\componentdetector.obj
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\componentswithstats.obj
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\container.obj
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\circleclassifier.obj
+c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\circle.obj
 c:\users\danny\desktop\aub\eece 437\opencvtest\x64\debug\opencvtest.exe
+c:\users\danny\desktop\aub\eece 437\opencvtest\x64\debug\opencvtest.ilk
 c:\users\danny\desktop\aub\eece 437\opencvtest\x64\debug\opencvtest.pdb
 c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\opencvtest.tlog\cl.command.1.tlog
 c:\users\danny\desktop\aub\eece 437\opencvtest\opencvtest\x64\debug\opencvtest.tlog\cl.read.1.tlog
