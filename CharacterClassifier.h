@@ -3,47 +3,21 @@
 #include "ComponentDetector.h"
 #include <cmath>
 
-typedef enum 
+struct CharacterClassifier
 {
-	CHAR,
-	CIRCLE,
-	ARROW
-} ComponentType;
-
-typedef enum
-{
-	BOX, // for the bounding_box stats
-	PIX // for the pixel stats
-} Stat;
-
-class CharacterClassifier
-{
-private:
-	ComponentType m_type; // The type of the components int the 
-public:
-	Components m_chars;
-	Components m_chars_unclassified;
+	Components m_chars; // Vector of all characters
+	Components m_chars_unclassified; // Vectos of characters later added by findChars
 
 	CharacterClassifier(); // Constructor
 	~CharacterClassifier(); // Destructor
+
 	int indexOf(Component t_component); // Returns index of component if found, -1 if not
-	double getMeanArea(); // Returns the mean of the areas of the components
-	double getMeanBoxArea(); // Returns the mean of the areas of the bounding boxes of the components
-	double getVarianceArea(); // Returns variance of Pixel Areas
-	double getVarianceBoxArea(); // Returns variance of Box Areas
-	double getStdev(Stat t_stat); // Returns the standard deviation of the desired Stat
 	double getMeanHeight(); // Returns the mean of the heights of the components
 	double getMeanWidth(); // Returns the mean of the width
 	double getVarianceHeight(); // Returns the variance of the height
 	double getVarianceWidth(); // Returns the variance of the width
 	double getStdevHeight(); // Returns the standard deviation of the height
 	double getStdevWidth(); // Returns the standard deviation of the width
-	void findChars(Components& t_components);
+	void findChars(Components& t_components); // Finds remaining characters in image
 	std::vector<int> getLabels(); // Returns vector of labels
 };
-
-//std::vector<int> operator+ (std::vector<int> left, std::vector<int> right)
-//{
-//	left.insert(left.end(), right.begin(), right.end());
-//	return left;
-//}
