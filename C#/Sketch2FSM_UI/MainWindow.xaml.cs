@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Sketch2FSM_UI
 {
@@ -222,9 +224,9 @@ namespace Sketch2FSM_UI
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = false;
             startInfo.UseShellExecute = false;
-            startInfo.FileName = "C:\\Users\\Danny\\Desktop\\AUB\\EECE 437\\OpenCVtest\\x64\\Debug\\OpenCVtest.exe";
+            startInfo.FileName = "./OpenCVtest.exe";// C:\\Users\\Danny\\Desktop\\AUB\\EECE 437\\OpenCVtest\\x64\\Debug\\OpenCVtest.exe";
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            startInfo.Arguments = "\"" + ImagePath +"\" >> ./a.txt";
+            startInfo.Arguments = "\"" + ImagePath +"\"";
 
             using (Process exeProcess = Process.Start(startInfo))
             {
@@ -295,6 +297,9 @@ namespace Sketch2FSM_UI
             DisplayComponentInfo();
 
             Show();
+
+            Start.Visibility = Visibility.Collapsed;
+            Done.Visibility = Visibility.Visible;
         }
 
         public void Redraw()
@@ -406,16 +411,16 @@ namespace Sketch2FSM_UI
 
         private void Left_Click(object sender, RoutedEventArgs e)
         {
-            // Save changes made previously
-            SaveChanges();
+            //// Save changes made previously
+            //SaveChanges();
 
-            // Decrement selected index
-            selected -= 1;
-            if (selected < 0) selected = components.Count;
-            if (selected < 0) return;
+            //// Decrement selected index
+            //selected -= 1;
+            //if (selected < 0) selected = components.Count;
+            //if (selected < 0) return;
 
-            // Display the information of the next component
-            DisplayComponentInfo();
+            //// Display the information of the next component
+            //DisplayComponentInfo();
         }
 
         private void Right_Click(object sender, RoutedEventArgs e)
@@ -482,6 +487,112 @@ namespace Sketch2FSM_UI
                 InitArrowPanel();
             }
             DisplayComponentInfo();
+        }
+
+        private string CleanUpName(string name)
+        {
+            name = name.ToUpper();
+            name = Regex.Replace(name, @"\s+", "");
+            name = "s" + name;
+            return name;
+        }
+
+        private void Done_Click(object sender, RoutedEventArgs e)
+        {
+            SaveChanges();
+
+            List<State> states = new List<State>();
+            List<Transition> transitions = new List<Transition>();
+            Dictionary<int, string> label2number = new Dictionary<int, string>();
+
+            foreach (IDrawable drawable in components)
+            {
+                if (drawable is State)
+                {
+                    State s = (State)drawable;
+                    s.name = CleanUpName(s.name);
+                    states.Add(s);
+                }
+                else if (drawable is Transition)
+                {
+                    transitions.Add((Transition)drawable);
+                }
+            }
+
+            int size = (int)Math.Ceiling(Math.Sqrt(states.Count));
+            for (int i = 0; i < states.Count; i++)
+            {
+                label2number[states.ElementAt(i).label] = Convert.ToString(i, 2).PadLeft(size, '0');
+            }
+
+            using (StreamWriter OutVHDL = new StreamWriter("./FSM.vhd"))
+            {
+                OutVHDL.WriteLine("library ieee;");
+                OutVHDL.WriteLine("use ieee.std_logic_1164.all;");
+                OutVHDL.WriteLine("use ieee.numeric_std.all;");
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("entity FSM is");
+                OutVHDL.WriteLine("Port(\tclk : in std_logic;");
+                OutVHDL.WriteLine("\treset : in std_logic;");
+                OutVHDL.WriteLine("\tinput : in std_logic;");
+                OutVHDL.WriteLine("\tstate_out : std_logic_vector (" + (size - 1).ToString() + " downto 0));");
+                OutVHDL.WriteLine("end FSM;");
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("architecture Behavioral of FSM is");
+                OutVHDL.WriteLine();
+                OutVHDL.Write("type state is (");
+                for (int i = 0; i < states.Count; i++)
+                {
+                    OutVHDL.Write(states.ElementAt(i).name);
+                    if (i != states.Count - 1)
+                    {
+                        OutVHDL.Write(",");
+                    }
+                }
+                OutVHDL.WriteLine(");");
+                OutVHDL.WriteLine("signal current_state, next_state : state;");
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("begin");
+                OutVHDL.WriteLine("seq : process (clk, reset)");
+                OutVHDL.WriteLine("begin");
+                OutVHDL.WriteLine();
+                OutVHDL.Write("if (reset = '1') then current_state <= ");
+                foreach (State state in states)
+                {
+                    if (state.is_accept)
+                    {
+                        OutVHDL.Write(state.name + ";");
+                        break;
+                    }
+                }
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("elsif (clk' event and clk = '1') then current_state <= next_state;");
+                OutVHDL.WriteLine("end if;");
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("end process;");
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("comb : process (input, current_state)");
+                OutVHDL.WriteLine("begin");
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("case current_state is");
+                foreach (Transition trans in transitions)
+                {
+                    string source = FindStateName(trans.source);
+                    string destination = FindStateName(trans.destination);
+                    OutVHDL.WriteLine("when " + source + " =>");
+                    OutVHDL.Write("state_out <= ");
+                    OutVHDL.WriteLine("\"" + label2number[trans.source] + "\"");
+                    OutVHDL.WriteLine("if ( input = '" + trans.label + "' )");
+                    OutVHDL.WriteLine("then next_state <= " + destination + ";");
+                    OutVHDL.WriteLine("else next_state <= " + source + ";");
+                    OutVHDL.WriteLine("end if;");
+                    OutVHDL.WriteLine();
+                }
+                OutVHDL.WriteLine("end case;");
+                OutVHDL.WriteLine("end process;");
+                OutVHDL.WriteLine();
+                OutVHDL.WriteLine("end Behavioral;");
+            }
         }
     }
 }

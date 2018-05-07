@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Sketch2FSM_UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="800"
+        Title="Sketch2FSM" Height="700" Width="800"
         SizeChanged="Window_SizeChanged">
     <StackPanel>
         <Grid>
@@ -25,7 +25,6 @@
                     </Grid.ColumnDefinitions>
                     <Label Grid.Column="1" >Sketch2FSM</Label>
                     -->
-                    <Label>Sketch2FSM</Label>
                 </Grid>
                 <Label >Drag and drop your image below</Label>
                 <StackPanel Height="100" Background="#ebeef4"
@@ -39,8 +38,8 @@
 
             <!-- Side Panel -->
             <StackPanel Grid.Column="1" Margin="0 46 25 0">
-                <Button Margin="0 5" Click="Start_Click" Padding="0 30">Start</Button>
-                <Button Margin="0 5" Padding="0 30" Visibility="Collapsed">Done</Button>
+                <Button Name="Start" Margin="0 5" Click="Start_Click" Padding="0 30">Start</Button>
+                <Button Name="Done" Margin="0 5" Click="Done_Click" Padding="0 30" Visibility="Collapsed">Done</Button>
             </StackPanel>
         </Grid>
         <Grid>
